@@ -6,7 +6,7 @@ import Navbar from "../components/Navbar";
 import AddReport from "../components/AddReport";
 import React from "react";
 
-function ReportPage({ setMode, mode }) {
+function MainPage({ setMode, mode }) {
   return (
     <Box>
       <Navbar />
@@ -20,4 +20,4 @@ function ReportPage({ setMode, mode }) {
   );
 }
 
-export default ReportPage;
+export default MainPage;

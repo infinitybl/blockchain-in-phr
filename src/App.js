@@ -6,7 +6,7 @@ import { Box, createTheme, Stack, ThemeProvider } from "@mui/material";
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import ReportPage from "./pages/ReportPage";
+import MainPage from "./pages/MainPage";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -27,7 +27,7 @@ function App() {
             <Route path="signup" element={<Signup />} />
             <Route
               path="report"
-              element={<ReportPage mode={mode} setMode={setMode} />}
+              element={<MainPage mode={mode} setMode={setMode} />}
             />
             {/* <Route path="*" element={<NoPage />} /> */}
           </Routes>
