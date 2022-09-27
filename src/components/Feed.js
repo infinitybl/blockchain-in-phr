@@ -1,8 +1,8 @@
-import { Box, Stack, Skeleton } from "@mui/material";
+import { Box, Stack, Skeleton, styled, InputBase } from "@mui/material";
 import React, { useState } from "react";
 import ReportCard from "./ReportCard";
 
-import { styled, InputBase } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const Search = styled("div")(({ theme }) => ({
   backgroundColor: "grey",
@@ -13,6 +13,8 @@ const Search = styled("div")(({ theme }) => ({
 
 const Feed = () => {
   const [loading, setLoading] = useState(false);
+
+  const location = useLocation();
 
   //   setTimeout(() => {
   //     setLoading(false);

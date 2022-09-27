@@ -28,7 +28,7 @@ const Icons = styled(Box)(({ theme }) => ({
   display: "none",
   alignItems: "center",
   gap: "20px",
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("md")]: {
     display: "flex",
   },
 }));
@@ -37,20 +37,23 @@ const UserBox = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   gap: "10px",
-  [theme.breakpoints.up("sm")]: {
+  [theme.breakpoints.up("md")]: {
     display: "none",
   },
 }));
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+
   return (
     <AppBar position="sticky">
       <StyledToolbar>
-        {/* <Typography variant="h6" sx={{ display: { xs: "none", sm: "block" } }}>
+        {/* <Typography variant="h6" sx={{ display: { xs: "none", sm: "none", md: "block" } }}>
           AERS
         </Typography> */}
-        <LocalHospital sx={{ display: { xs: "block", sm: "block" } }} />
+        <LocalHospital
+          sx={{ display: { xs: "block", sm: "none", md: "block" } }}
+        />
         <Search>
           <InputBase placeholder="Search Reports" />
         </Search>

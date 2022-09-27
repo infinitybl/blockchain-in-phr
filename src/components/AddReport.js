@@ -10,8 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Add as AddIcon } from "@mui/icons-material";
+import { Add as AddIcon, DateRange } from "@mui/icons-material";
 import { Box } from "@mui/system";
+
+import DateUtils from "@date-io/moment"; // choose your lib
+import {
+  KeyboardDateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 
 const SytledModal = styled(Modal)({
   display: "flex",
@@ -28,6 +34,8 @@ const UserBox = styled(Box)({
 
 const AddReport = () => {
   const [open, setOpen] = useState(false);
+  const [selectedDate, handleDateChange] = useState(new Date());
+
   return (
     <>
       <Tooltip
@@ -70,22 +78,28 @@ const AddReport = () => {
             </Typography>
           </UserBox>
           <TextField
-            sx={{ width: "100%" }}
+            sx={{ width: "100%", bottom: 20 }}
             id="standard-multiline-static"
             multiline
             rows={3}
             placeholder="Enter Description"
             variant="standard"
           />
+          <MuiPickersUtilsProvider utils={DateUtils}>
+            <KeyboardDateTimePicker
+              value={selectedDate}
+              onChange={handleDateChange}
+              label="Date of incident"
+              onError={console.log}
+              format="yyyy/MM/dd hh:mm a"
+            />
+          </MuiPickersUtilsProvider>
           <ButtonGroup
             fullWidth
             variant="contained"
             aria-label="outlined primary button group"
           >
             <Button>Create</Button>
-            {/* <Button sx={{ width: "100px" }}>
-              <DateRange />
-            </Button> */}
           </ButtonGroup>
         </Box>
       </SytledModal>

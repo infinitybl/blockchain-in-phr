@@ -7,6 +7,7 @@ import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import MainPage from "./pages/MainPage";
+import ErrorPage from "./pages/ErrorPage";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -26,10 +27,10 @@ function App() {
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route
-              path="report"
+              path="main"
               element={<MainPage mode={mode} setMode={setMode} />}
             />
-            {/* <Route path="*" element={<NoPage />} /> */}
+            {/* <Route path="*" element={<ErrorPage />} /> */}
           </Routes>
         </BrowserRouter>
       </Box>
