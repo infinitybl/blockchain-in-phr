@@ -4,6 +4,7 @@ import Rightbar from "../components/Rightbar";
 import { Box, Stack } from "@mui/material";
 import Navbar from "../components/Navbar";
 import AddReport from "../components/AddReport";
+import ChangeTheme from "../components/ChangeTheme";
 import React from "react";
 
 function MainPage({ setMode, mode }) {
@@ -16,6 +17,7 @@ function MainPage({ setMode, mode }) {
         <Rightbar />
       </Stack>
       <AddReport />
+      <ChangeTheme setMode={setMode} mode={mode} />
     </Box>
   );
 }

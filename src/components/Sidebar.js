@@ -57,7 +57,7 @@ const Sidebar = ({ mode, setMode }) => {
               <ListItemText primary="Action Plans" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton component="a" href="#theme">
               <ListItemIcon>
                 <ModeNight />
@@ -67,7 +67,7 @@ const Sidebar = ({ mode, setMode }) => {
                 onChange={(e) => setMode(mode === "light" ? "dark" : "light")}
               />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
         </List>
       </Box>
     </Box>

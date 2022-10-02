@@ -43,7 +43,7 @@ const AddReport = () => {
       sx={{
         position: "fixed",
         bottom: 20,
-        left: { xs: "calc(50% - 20px)", md: 30 },
+        left: 20,
       }}
     >
       <Fab color="primary" aria-label="add" variant="extended">

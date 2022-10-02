@@ -19,7 +19,7 @@ const ReportCard = () => {
     <Card sx={{ marginLeft: 10, marginTop: 10 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
+          <Avatar sx={{ bgcolor: "red" }} aria-label="report">
             R
           </Avatar>
         }
