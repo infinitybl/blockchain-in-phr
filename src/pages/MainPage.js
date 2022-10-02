@@ -11,7 +11,14 @@ function MainPage({ setMode, mode }) {
   return (
     <Box>
       <Navbar />
-      <Stack direction="row" spacing={2} justifyContent="space-between">
+      <Stack
+        direction={{ sm: "column", md: "row" }}
+        spacing={2}
+        justifyContent="space-between"
+        sx={{
+          marginBotton: "50px",
+        }}
+      >
         <Sidebar setMode={setMode} mode={mode} />
         <Feed />
         <Rightbar />

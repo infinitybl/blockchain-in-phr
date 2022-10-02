@@ -18,12 +18,15 @@ import React from "react";
 
 const Sidebar = ({ mode, setMode }) => {
   return (
-    <Box
-      flex={1}
-      p={2}
-      // sx={{ display: { xs: "none", sm: "none", md: "block" } }}
-    >
-      <Box position="fixed">
+    <Box flex={1} p={2}>
+      <Box
+        sx={{
+          position: {
+            sm: "static",
+            md: "fixed",
+          },
+        }}
+      >
         <List>
           <ListItem disablePadding>
             <ListItemButton component="a" href="#submitted-reports">

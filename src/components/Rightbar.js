@@ -11,12 +11,15 @@ import React from "react";
 
 const Rightbar = () => {
   return (
-    <Box
-      flex={2}
-      p={2}
-      // sx={{ display: { xs: "none", sm: "none", md: "block" } }}
-    >
-      <Box position="fixed">
+    <Box flex={2} p={2} sx={{ display: "block" }}>
+      <Box
+        sx={{
+          position: {
+            sm: "static",
+            md: "fixed",
+          },
+        }}
+      >
         <Typography variant="h6" fontWeight={100} mt={2}>
           Associated Health Ministries
         </Typography>

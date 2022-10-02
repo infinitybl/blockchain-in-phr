@@ -48,7 +48,12 @@ const AddReport = () => {
     >
       <Fab color="primary" aria-label="add" variant="extended">
         <AddIcon />
-        <Typography variant="span">Add Incident Report</Typography>
+        <Typography
+          variant="span"
+          sx={{ display: { xs: "none", sm: "block" } }}
+        >
+          Add Incident Report
+        </Typography>
       </Fab>
     </Tooltip>
   ) : (
