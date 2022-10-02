@@ -15,16 +15,19 @@ function MainPage({ setMode, mode }) {
         direction={{ sm: "column", md: "row" }}
         spacing={2}
         justifyContent="space-between"
-        sx={{
-          marginBotton: "50px",
-        }}
       >
         <Sidebar setMode={setMode} mode={mode} />
         <Feed />
         <Rightbar />
       </Stack>
-      <AddReport />
-      <ChangeTheme setMode={setMode} mode={mode} />
+      <Box
+        sx={{
+          marginTop: { xs: "50px", lg: 0 },
+        }}
+      >
+        <AddReport />
+        <ChangeTheme setMode={setMode} mode={mode} />
+      </Box>
     </Box>
   );
 }

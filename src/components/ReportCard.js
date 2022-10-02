@@ -16,11 +16,17 @@ import {
 
 const ReportCard = () => {
   return (
-    <Card sx={{ marginLeft: { sm: 0, md: 10 }, marginTop: { sm: 0, md: 10 } }}>
+    <Card
+      sx={{
+        marginLeft: { xs: 2, md: 10 },
+        marginTop: { xs: 0, md: 10 },
+        marginRight: { xs: 2, md: 0 },
+      }}
+    >
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "red" }} aria-label="report">
-            R
+            J
           </Avatar>
         }
         action={
