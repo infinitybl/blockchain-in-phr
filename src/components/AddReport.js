@@ -13,11 +13,12 @@ import React, { useState } from "react";
 import { Add as AddIcon, DateRange } from "@mui/icons-material";
 import { Box } from "@mui/system";
 
-import DateUtils from "@date-io/moment"; // choose your lib
-import {
-  KeyboardDateTimePicker,
-  MuiPickersUtilsProvider,
-} from "@material-ui/pickers";
+import moment from "moment";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+
+import { MuiTelInput } from "mui-tel-input";
 
 import ChangeTheme from "../components/ChangeTheme";
 
@@ -36,7 +37,20 @@ const UserBox = styled(Box)({
 
 const AddReport = ({ setMode, mode }) => {
   const [open, setOpen] = useState(false);
-  const [selectedDate, handleDateChange] = useState(new Date());
+
+  const [selectedDate, setSelectedDate] = useState(
+    moment("2014-08-18T21:11:54")
+  );
+
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+  };
+
+  const [phone, setPhone] = useState("");
+
+  const handlePhoneChange = (newPhone) => {
+    setPhone(newPhone);
+  };
 
   return (
     <>
@@ -71,14 +85,17 @@ const AddReport = ({ setMode, mode }) => {
         aria-describedby="modal-modal-description"
       >
         <Box
-          width={400}
-          height={280}
           bgcolor={"background.default"}
           color={"text.primary"}
           p={3}
           borderRadius={5}
         >
-          <Typography variant="h6" color="gray" textAlign="center">
+          <Typography
+            variant="h6"
+            color="gray"
+            textAlign="center"
+            sx={{ marginBottom: 2 }}
+          >
             Create new incident report
           </Typography>
           <UserBox>
@@ -91,28 +108,81 @@ const AddReport = ({ setMode, mode }) => {
             </Typography>
           </UserBox>
           <TextField
-            sx={{ width: "100%", bottom: 20 }}
+            margin="normal"
+            sx={{ width: "100%", marginBottom: 2 }}
             id="standard-multiline-static"
             multiline
-            rows={3}
-            placeholder="Enter Description"
-            variant="standard"
+            rows={4}
+            name="incident-description"
+            label="Incident Desciption"
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
-          <MuiPickersUtilsProvider utils={DateUtils}>
-            <KeyboardDateTimePicker
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <DateTimePicker
+              label="Incident Date"
               value={selectedDate}
               onChange={handleDateChange}
-              label="Date of incident"
-              onError={console.log}
-              format="yyyy/MM/DD hh:mm a"
+              renderInput={(params) => <TextField {...params} />}
             />
-          </MuiPickersUtilsProvider>
+          </LocalizationProvider>
+          <TextField
+            margin="normal"
+            sx={{ width: "100%", marginBottom: 2 }}
+            id="outlined-basic"
+            name="incident-category"
+            label="Incident Category"
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            margin="normal"
+            sx={{ width: "100%", marginBottom: 2 }}
+            id="outlined-basic"
+            name="care-setting"
+            label="Care Setting"
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            margin="normal"
+            sx={{ width: "100%", marginBottom: 2 }}
+            id="outlined-basic"
+            name="care-setting"
+            label="Care Setting"
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            margin="normal"
+            sx={{ width: "100%", marginBottom: 2 }}
+            id="outlined-basic"
+            name="email"
+            label="Email"
+            variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <MuiTelInput
+            label="Phone Number"
+            value={phone}
+            onChange={handlePhoneChange}
+          />
           <ButtonGroup
             fullWidth
             variant="contained"
             aria-label="outlined primary button group"
+            sx={{ marginTop: 3 }}
           >
-            <Button>Create</Button>
+            <Button fullWidth>Create</Button>
           </ButtonGroup>
         </Box>
       </SytledModal>
