@@ -85,6 +85,8 @@ const AddReport = ({ setMode, mode }) => {
         aria-describedby="modal-modal-description"
       >
         <Box
+          maxWidth={"500px"}
+          maxHeight={"500px"}
           bgcolor={"background.default"}
           color={"text.primary"}
           p={3}
@@ -112,7 +114,7 @@ const AddReport = ({ setMode, mode }) => {
             sx={{ width: "100%", marginBottom: 2 }}
             id="standard-multiline-static"
             multiline
-            rows={4}
+            rows={3}
             name="incident-description"
             label="Incident Desciption"
             InputLabelProps={{
