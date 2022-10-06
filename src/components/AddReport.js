@@ -18,8 +18,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-import { MuiTelInput } from "mui-tel-input";
-
 import ChangeTheme from "../components/ChangeTheme";
 
 const SytledModal = styled(Modal)({
@@ -44,12 +42,6 @@ const AddReport = ({ setMode, mode }) => {
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
-  };
-
-  const [phone, setPhone] = useState("");
-
-  const handlePhoneChange = (newPhone) => {
-    setPhone(newPhone);
   };
 
   return (
@@ -172,11 +164,6 @@ const AddReport = ({ setMode, mode }) => {
             InputLabelProps={{
               shrink: true,
             }}
-          />
-          <MuiTelInput
-            label="Phone Number"
-            value={phone}
-            onChange={handlePhoneChange}
           />
           <ButtonGroup
             fullWidth

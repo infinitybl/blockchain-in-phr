@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import { MuiTelInput } from "mui-tel-input";
 
 function Copyright(props) {
   return (
@@ -34,6 +36,12 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Signup() {
+  const [phone, setPhone] = useState("");
+
+  const handlePhoneChange = (newPhone) => {
+    setPhone(newPhone);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -87,6 +95,13 @@ export default function Signup() {
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} sx={{ width: "100%" }}>
+                <MuiTelInput
+                  label="Phone Number"
+                  value={phone}
+                  onChange={handlePhoneChange}
                 />
               </Grid>
               <Grid item xs={12}>
