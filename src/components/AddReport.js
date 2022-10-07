@@ -73,12 +73,13 @@ const AddReport = ({ setMode, mode }) => {
         aria-describedby="modal-modal-description"
       >
         <Box
-          maxWidth={"500px"}
-          maxHeight={"500px"}
+          maxWidth={"600px"}
+          maxHeight={"600px"}
           bgcolor={"background.default"}
           color={"text.primary"}
           p={3}
           borderRadius={5}
+          sx={{ overflow: "auto" }}
         >
           <Typography
             variant="h6"

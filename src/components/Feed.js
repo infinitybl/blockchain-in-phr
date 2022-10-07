@@ -21,7 +21,7 @@ const Feed = () => {
   //   }, [3000]);
 
   return (
-    <Box flex={4} p={{ xs: 0, md: 2 }}>
+    <Box flex={4} p={{ xs: 0, md: 2 }} sx={{ height: "100vh" }}>
       {loading ? (
         <Stack spacing={1}>
           <Skeleton variant="text" height={100} />

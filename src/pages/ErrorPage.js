@@ -19,21 +19,31 @@ export default function ErrorPage() {
           alignItems: "center",
           minHeight: "100vh",
           backgroundColor: primary,
+          textAlign: "center",
         }}
       >
         <Box>
-          <Typography variant="h1" style={{ color: "white" }}>
+          <Typography variant="h1" style={{ color: "white" }} p={2}>
             404 Page Not Found
           </Typography>
-          <Button
-            component={LinkReactRouterDom}
-            to="/"
-            variant="contained"
-            color="success"
-            sx={{ height: 40, textAlign: "center", margin: "auto" }}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "18px",
+            }}
           >
-            Return to Homepage
-          </Button>
+            <Button
+              component={LinkReactRouterDom}
+              to="/"
+              variant="contained"
+              color="success"
+              sx={{ height: 40, textAlign: "center", margin: "auto" }}
+            >
+              Return to Homepage
+            </Button>
+          </Box>
         </Box>
       </Box>
     </>
