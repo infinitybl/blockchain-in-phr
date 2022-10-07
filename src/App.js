@@ -9,6 +9,9 @@ import Signup from "./pages/Signup";
 import MainPage from "./pages/MainPage";
 import ErrorPage from "./pages/ErrorPage";
 
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+
 function App() {
   const [mode, setMode] = useState("light");
 
@@ -19,22 +22,24 @@ function App() {
   });
 
   return (
-    <ThemeProvider theme={darkTheme}>
-      <Box bgcolor={"background.default"} color={"text.primary"}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Homepage />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<Signup />} />
-            <Route
-              path="main"
-              element={<MainPage mode={mode} setMode={setMode} />}
-            />
-            {/* <Route path="*" element={<ErrorPage />} /> */}
-          </Routes>
-        </BrowserRouter>
-      </Box>
-    </ThemeProvider>
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <ThemeProvider theme={darkTheme}>
+        <Box bgcolor={"background.default"} color={"text.primary"}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Homepage />} />
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<Signup />} />
+              <Route
+                path="main"
+                element={<MainPage mode={mode} setMode={setMode} />}
+              />
+              <Route path="*" element={<ErrorPage />} />
+            </Routes>
+          </BrowserRouter>
+        </Box>
+      </ThemeProvider>
+    </LocalizationProvider>
   );
 }
 

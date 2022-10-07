@@ -14,8 +14,6 @@ import { Add as AddIcon, DateRange } from "@mui/icons-material";
 import { Box } from "@mui/system";
 
 import moment from "moment";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
 import ChangeTheme from "../components/ChangeTheme";
@@ -36,9 +34,7 @@ const UserBox = styled(Box)({
 const AddReport = ({ setMode, mode }) => {
   const [open, setOpen] = useState(false);
 
-  const [selectedDate, setSelectedDate] = useState(
-    moment("2014-08-18T21:11:54")
-  );
+  const [selectedDate, setSelectedDate] = useState(moment());
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
@@ -113,14 +109,12 @@ const AddReport = ({ setMode, mode }) => {
               shrink: true,
             }}
           />
-          <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DateTimePicker
-              label="Incident Date"
-              value={selectedDate}
-              onChange={handleDateChange}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider>
+          <DateTimePicker
+            label="Incident Date"
+            value={selectedDate}
+            onChange={handleDateChange}
+            renderInput={(params) => <TextField {...params} />}
+          />
           <TextField
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
