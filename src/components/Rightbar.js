@@ -43,7 +43,7 @@ const Rightbar = () => {
           </ListItem>
         </List>
         <Typography variant="h6" fontWeight={100} mt={2}>
-          Associated Pharmacies
+          Associated Medical Companies
         </Typography>
         <List
           sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}

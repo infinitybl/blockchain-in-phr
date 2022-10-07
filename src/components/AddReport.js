@@ -3,7 +3,10 @@ import {
   Button,
   ButtonGroup,
   Fab,
+  FormControl,
+  InputLabel,
   Modal,
+  NativeSelect,
   styled,
   TextField,
   Tooltip,
@@ -78,7 +81,7 @@ const AddReport = ({ setMode, mode }) => {
           bgcolor={"background.default"}
           color={"text.primary"}
           p={3}
-          borderRadius={5}
+          borderRadius={1}
           sx={{ overflow: "auto" }}
         >
           <Typography
@@ -142,24 +145,31 @@ const AddReport = ({ setMode, mode }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="care-setting"
-            label="Care Setting"
+            name="medication-taken"
+            label="Medication Taken"
             variant="outlined"
             InputLabelProps={{
               shrink: true,
             }}
           />
-          <TextField
-            margin="normal"
-            sx={{ width: "100%", marginBottom: 2 }}
-            id="outlined-basic"
-            name="email"
-            label="Email"
-            variant="outlined"
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+          <FormControl fullWidth>
+            <InputLabel variant="standard" htmlFor="uncontrolled-native">
+              Medical Company Involved
+            </InputLabel>
+            <NativeSelect
+              defaultValue={"rexall"}
+              inputProps={{
+                name: "medical-company-involved",
+                id: "uncontrolled-native",
+              }}
+            >
+              <option value={"rexall"}>Rexall Pharmacy</option>
+            </NativeSelect>
+          </FormControl>
+          <Button variant="contained" component="label" sx={{ marginTop: 2 }}>
+            Upload Files
+            <input hidden multiple type="file" />
+          </Button>
           <ButtonGroup
             fullWidth
             variant="contained"
