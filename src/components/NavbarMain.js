@@ -64,7 +64,7 @@ const NavbarMain = () => {
           />
         </IconButton>
         <Search>
-          <InputBase placeholder="Search Reports" />
+          <InputBase sx={{ color: "black" }} placeholder="Search Reports" />
         </Search>
         <Icons>
           {/* <Badge badgeContent={4} color="error">
@@ -97,8 +97,12 @@ const NavbarMain = () => {
           horizontal: "right",
         }}
       >
-        <MenuItem>Profile</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem component={LinkReactRouterDom} to="/profile">
+          Profile
+        </MenuItem>
+        <MenuItem component={LinkReactRouterDom} to="/">
+          Logout
+        </MenuItem>
       </Menu>
     </AppBar>
   );

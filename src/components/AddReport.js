@@ -4,6 +4,7 @@ import {
   ButtonGroup,
   Fab,
   FormControl,
+  IconButton,
   InputLabel,
   Modal,
   NativeSelect,
@@ -13,7 +14,12 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Add as AddIcon, DateRange } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  Close,
+  DateRange,
+  FilePresent,
+} from "@mui/icons-material";
 import { Box } from "@mui/system";
 
 import moment from "moment";
@@ -84,14 +90,19 @@ const AddReport = ({ setMode, mode }) => {
           borderRadius={1}
           sx={{ overflow: "auto" }}
         >
-          <Typography
-            variant="h6"
-            color="gray"
-            textAlign="center"
-            sx={{ marginBottom: 2 }}
-          >
-            Create new incident report
-          </Typography>
+          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+            <Typography
+              variant="h6"
+              color="gray"
+              textAlign="center"
+              sx={{ marginBottom: 2 }}
+            >
+              Create New Incident Report
+            </Typography>
+            <IconButton onClick={(e) => setOpen(false)}>
+              <Close />
+            </IconButton>
+          </Box>
           <UserBox>
             <Typography fontWeight={600} variant="span">
               Reporter:
@@ -167,6 +178,7 @@ const AddReport = ({ setMode, mode }) => {
             </NativeSelect>
           </FormControl>
           <Button variant="contained" component="label" sx={{ marginTop: 2 }}>
+            <FilePresent />
             Upload Files
             <input hidden multiple type="file" />
           </Button>

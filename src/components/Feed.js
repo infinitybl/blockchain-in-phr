@@ -1,4 +1,11 @@
-import { Box, Stack, Skeleton, styled, InputBase } from "@mui/material";
+import {
+  Box,
+  Stack,
+  Skeleton,
+  Typography,
+  styled,
+  InputBase,
+} from "@mui/material";
 import React, { useState } from "react";
 import ReportCard from "./ReportCard";
 
@@ -31,10 +38,37 @@ const Feed = () => {
         </Stack>
       ) : (
         <Box>
+          <Typography
+            variant="h6"
+            fontWeight={100}
+            mt={2}
+            sx={{ textAlign: "center" }}
+          >
+            Reports
+          </Typography>
           {/* <Search>
             <InputBase placeholder="Search Reports" />
           </Search> */}
-          <ReportCard />
+          <ReportCard
+            reporterName="John Doe"
+            incidentDescription="Incident Description 1"
+            incidentDate="August 28, 2022"
+            incidentCategory="Prescribed Medication"
+            careSetting="Home"
+            medicationTaken="Atorvastatin"
+            medicalCompanyInvolved="Rexall Pharmacy"
+            files=""
+          />
+          <ReportCard
+            reporterName="John Doe"
+            incidentDescription="Incident Description 2"
+            incidentDate="January 14, 2022"
+            incidentCategory="Clinical Trial"
+            careSetting="Home"
+            medicationTaken="Lisinopril"
+            medicalCompanyInvolved="Rexall Pharmacy"
+            files=""
+          />
         </Box>
       )}
     </Box>
