@@ -39,11 +39,11 @@ const Sidebar = ({ mode, setMode }) => {
         </Typography>
         <List>
           <ListItem disablePadding>
-            <ListItemButton component="a" href="#submitted">
+            <ListItemButton component="a" href="#all">
               <ListItemIcon>
                 <Article />
               </ListItemIcon>
-              <ListItemText primary="Submitted" />
+              <ListItemText primary="All" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
