@@ -25,6 +25,8 @@ const ReportCard = ({
   medicationTaken,
   medicalCompanyInvolved,
   files,
+  actionPlanModalOpen,
+  setActionPlanModalOpen,
 }) => {
   return (
     <Card
@@ -78,7 +80,10 @@ const ReportCard = ({
             <Edit />
           </IconButton>
         </Tooltip>
-        <Tooltip title="Create Action Plan">
+        <Tooltip
+          title="Create Action Plan"
+          onClick={(e) => setActionPlanModalOpen(true)}
+        >
           <IconButton aria-label="create action plan">
             <Summarize />
           </IconButton>

@@ -1,13 +1,15 @@
+import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Feed from "../components/Feed";
 import Rightbar from "../components/Rightbar";
 import { Box, Stack } from "@mui/material";
 import NavbarMain from "../components/NavbarMain";
 import AddReport from "../components/AddReport";
-
-import React from "react";
+import AddActionPlan from "../components/AddActionPlan";
 
 function MainPage({ setMode, mode }) {
+  const [actionPlanModalOpen, setActionPlanModalOpen] = useState(false);
+
   return (
     <Box>
       <NavbarMain />
@@ -17,7 +19,10 @@ function MainPage({ setMode, mode }) {
         justifyContent="space-between"
       >
         <Sidebar setMode={setMode} mode={mode} />
-        <Feed />
+        <Feed
+          actionPlanModalOpen={actionPlanModalOpen}
+          setActionPlanModalOpen={setActionPlanModalOpen}
+        />
         <Rightbar />
       </Stack>
       <Box
@@ -25,7 +30,11 @@ function MainPage({ setMode, mode }) {
           marginTop: { xs: "50px", lg: 0 },
         }}
       >
-        <AddReport setMode={setMode} mode={mode} />
+        <AddReport />
+        <AddActionPlan
+          open={actionPlanModalOpen}
+          setOpen={setActionPlanModalOpen}
+        />
       </Box>
     </Box>
   );

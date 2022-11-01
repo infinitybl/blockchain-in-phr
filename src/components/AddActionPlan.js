@@ -40,9 +40,7 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const AddActionPlan = ({ setMode, mode }) => {
-  const [open, setOpen] = useState(false);
-
+const AddActionPlan = ({ open, setOpen }) => {
   const [selectedDate, setSelectedDate] = useState(moment());
 
   const handleDateChange = (newDate) => {
@@ -51,30 +49,6 @@ const AddActionPlan = ({ setMode, mode }) => {
 
   return (
     <>
-      {!open && (
-        <>
-          <Tooltip
-            onClick={(e) => setOpen(true)}
-            title="Add"
-            sx={{
-              position: "fixed",
-              bottom: 20,
-              left: 20,
-            }}
-          >
-            <Fab color="primary" aria-label="add" variant="extended">
-              <AddIcon />
-              <Typography
-                variant="span"
-                sx={{ display: { xs: "none", sm: "block" } }}
-              >
-                Add Incident Report
-              </Typography>
-            </Fab>
-          </Tooltip>
-          <ChangeTheme setMode={setMode} mode={mode} open={open} />
-        </>
-      )}
       <SytledModal
         open={open}
         onClose={(e) => setOpen(false)}
@@ -97,7 +71,7 @@ const AddActionPlan = ({ setMode, mode }) => {
               textAlign="center"
               sx={{ marginBottom: 2 }}
             >
-              Create New Incident Report
+              Create New Action Plan
             </Typography>
             <IconButton onClick={(e) => setOpen(false)}>
               <Close />
@@ -118,14 +92,14 @@ const AddActionPlan = ({ setMode, mode }) => {
             id="standard-multiline-static"
             multiline
             rows={3}
-            name="incident-description"
-            label="Incident Desciption"
+            name="action-plan-description"
+            label="Action Plan Desciption"
             InputLabelProps={{
               shrink: true,
             }}
           />
           <DateTimePicker
-            label="Incident Date"
+            label="Action Plan Creation Date"
             value={selectedDate}
             onChange={handleDateChange}
             renderInput={(params) => <TextField {...params} />}
@@ -134,8 +108,8 @@ const AddActionPlan = ({ setMode, mode }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="incident-category"
-            label="Incident Category"
+            name="clinical-outcome"
+            label="Clinical Outcome"
             variant="outlined"
             InputLabelProps={{
               shrink: true,
@@ -145,8 +119,8 @@ const AddActionPlan = ({ setMode, mode }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="care-setting"
-            label="Care Setting"
+            name="contributing-factors"
+            label="Contributing Factors"
             variant="outlined"
             InputLabelProps={{
               shrink: true,
@@ -156,9 +130,21 @@ const AddActionPlan = ({ setMode, mode }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="medication-taken"
-            label="Medication Taken"
+            name="suspected-medication"
+            label="Suspected Medication"
             variant="outlined"
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            margin="normal"
+            sx={{ width: "100%", marginBottom: 2 }}
+            id="standard-multiline-static"
+            multiline
+            rows={3}
+            name="action-to-take-by-medical-company"
+            label="Action To Take By Medical Company"
             InputLabelProps={{
               shrink: true,
             }}
