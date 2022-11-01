@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Avatar,
   Box,
@@ -7,7 +8,7 @@ import {
   ListItemText,
   Typography,
 } from "@mui/material";
-import React from "react";
+import { LocalPharmacy } from "@mui/icons-material";
 
 const Rightbar = () => {
   return (

@@ -20,7 +20,7 @@ import {
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { LockOutlined } from "@mui/icons-material";
+import { LocalPharmacy, LockOutlinedIcon } from "@mui/icons-material";
 
 import Navbar from "../components/Navbar";
 
@@ -29,45 +29,13 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { MuiTelInput } from "mui-tel-input";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 const theme = createTheme();
 
-export default function Signup() {
+export default function ProfilePage() {
   const [userType, setUserType] = useState("patient");
   const [phone, setPhone] = useState("");
 
-  const handlePhoneChange = (newPhone) => {
-    setPhone(newPhone);
-  };
-
   const [selectedDate, setSelectedDate] = useState(moment());
-
-  const handleDateChange = (newDate) => {
-    setSelectedDate(newDate);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -83,40 +51,30 @@ export default function Signup() {
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlined />
+            <LocalPharmacy />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign Up
+            Profile
           </Typography>
           <Box sx={{ marginTop: 2 }}>
-            <InputLabel variant="standard">Select User Type</InputLabel>
+            <InputLabel variant="standard">User Type</InputLabel>
             <ButtonGroup disableElevation variant="contained" color="primary">
-              <Button
-                color={userType === "patient" ? "secondary" : "primary"}
-                onClick={() => setUserType("patient")}
-              >
+              <Button color={userType === "patient" ? "secondary" : "primary"}>
                 Patient
               </Button>
               <Button
                 color={userType === "medicalCompany" ? "secondary" : "primary"}
-                onClick={() => setUserType("medicalCompany")}
               >
                 Medical Company
               </Button>
               <Button
                 color={userType === "government" ? "secondary" : "primary"}
-                onClick={() => setUserType("government")}
               >
                 Health Ministry
               </Button>
             </ButtonGroup>
           </Box>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box component="form" noValidate sx={{ mt: 3, mb: 8 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
@@ -126,6 +84,9 @@ export default function Signup() {
                   name="metaMaskWalletAddress"
                   label="MetaMask Wallet Address"
                   autoComplete="metamask-wallet-address"
+                  inputProps={{
+                    readOnly: true,
+                  }}
                 />
               </Grid>
               {userType === "patient" && (
@@ -139,6 +100,9 @@ export default function Signup() {
                       id="firstName"
                       label="First Name"
                       autoFocus
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -149,21 +113,28 @@ export default function Signup() {
                       label="Last Name"
                       name="lastName"
                       autoComplete="family-name"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <DatePicker
                       label="Date of Birth"
                       value={selectedDate}
-                      onChange={handleDateChange}
                       renderInput={(params) => <TextField {...params} />}
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <MuiTelInput
                       label="Phone Number"
                       value={phone}
-                      onChange={handlePhoneChange}
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -174,6 +145,9 @@ export default function Signup() {
                       name="email"
                       label="Email Address"
                       autoComplete="email"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -184,6 +158,9 @@ export default function Signup() {
                       name="gender"
                       label="Gender"
                       autoComplete="gender"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -194,6 +171,9 @@ export default function Signup() {
                       name="homeAddress"
                       label="Home Address"
                       autoComplete="home-address"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -210,6 +190,7 @@ export default function Signup() {
                           name: "blood-type",
                           id: "uncontrolled-native",
                         }}
+                        disabled
                       >
                         <option value={"O-"}>O-</option>
                         <option value={"O+"}>O+</option>
@@ -235,6 +216,9 @@ export default function Signup() {
                       id="companyName"
                       label="Company Name"
                       autoFocus
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -246,13 +230,18 @@ export default function Signup() {
                       id="companyType"
                       label="Company Type"
                       autoFocus
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <MuiTelInput
                       label="Phone Number"
                       value={phone}
-                      onChange={handlePhoneChange}
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -263,6 +252,9 @@ export default function Signup() {
                       name="email"
                       label="Email Address"
                       autoComplete="email"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -273,6 +265,9 @@ export default function Signup() {
                       name="locationAddress"
                       label="Office Location Address"
                       autoComplete="location-address"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                 </>
@@ -288,6 +283,9 @@ export default function Signup() {
                       id="healthMinistryName"
                       label="Health Ministry Name"
                       autoFocus
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -299,13 +297,18 @@ export default function Signup() {
                       id="country"
                       label="Country"
                       autoFocus
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
                     <MuiTelInput
                       label="Phone Number"
                       value={phone}
-                      onChange={handlePhoneChange}
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -316,6 +319,9 @@ export default function Signup() {
                       name="email"
                       label="Email Address"
                       autoComplete="email"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -326,38 +332,16 @@ export default function Signup() {
                       name="locationAddress"
                       label="Office Location Address"
                       autoComplete="location-address"
+                      inputProps={{
+                        readOnly: true,
+                      }}
                     />
                   </Grid>
                 </>
               )}
-
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="/login" variant="body2">
-                  Already have an account? Log in
-                </Link>
-              </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );

@@ -7,6 +7,7 @@ import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import MainPage from "./pages/MainPage";
+import ProfilePage from "./pages/ProfilePage";
 import ErrorPage from "./pages/ErrorPage";
 
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -34,6 +35,7 @@ function App() {
                 path="main"
                 element={<MainPage mode={mode} setMode={setMode} />}
               />
+              <Route path="profile" element={<ProfilePage />} />
               <Route path="*" element={<ErrorPage />} />
             </Routes>
           </BrowserRouter>
