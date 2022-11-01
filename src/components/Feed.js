@@ -18,7 +18,12 @@ const Search = styled("div")(({ theme }) => ({
   width: "40%",
 }));
 
-const Feed = ({ actionPlanModalOpen, setActionPlanModalOpen }) => {
+const Feed = ({
+  addActionPlanModalOpen,
+  setAddActionPlanModalOpen,
+  editReportModalOpen,
+  setEditReportModalOpen,
+}) => {
   const [loading, setLoading] = useState(false);
 
   const location = useLocation();
@@ -58,8 +63,10 @@ const Feed = ({ actionPlanModalOpen, setActionPlanModalOpen }) => {
             medicationTaken="Atorvastatin"
             medicalCompanyInvolved="Rexall Pharmacy"
             files=""
-            actionPlanModalOpen={actionPlanModalOpen}
-            setActionPlanModalOpen={setActionPlanModalOpen}
+            addActionPlanModalOpen={addActionPlanModalOpen}
+            setAddActionPlanModalOpen={setAddActionPlanModalOpen}
+            editReportModalOpen={editReportModalOpen}
+            setEditReportModalOpen={setEditReportModalOpen}
           />
           <ReportCard
             reporterName="John Doe"
@@ -70,8 +77,10 @@ const Feed = ({ actionPlanModalOpen, setActionPlanModalOpen }) => {
             medicationTaken="Lisinopril"
             medicalCompanyInvolved="Rexall Pharmacy"
             files=""
-            actionPlanModalOpen={actionPlanModalOpen}
-            setActionPlanModalOpen={setActionPlanModalOpen}
+            addActionPlanModalOpen={addActionPlanModalOpen}
+            setAddActionPlanModalOpen={setAddActionPlanModalOpen}
+            editReportModalOpen={editReportModalOpen}
+            setEditReportModalOpen={setEditReportModalOpen}
           />
         </Box>
       )}

@@ -38,9 +38,7 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const EditReport = ({ setMode, mode }) => {
-  const [open, setOpen] = useState(false);
-
+const EditReport = ({ open, setOpen }) => {
   const [selectedDate, setSelectedDate] = useState(moment());
 
   const handleDateChange = (newDate) => {

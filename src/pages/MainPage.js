@@ -6,9 +6,11 @@ import { Box, Stack } from "@mui/material";
 import NavbarMain from "../components/NavbarMain";
 import AddReport from "../components/AddReport";
 import AddActionPlan from "../components/AddActionPlan";
+import EditReport from "../components/EditReport";
 
 function MainPage({ setMode, mode }) {
-  const [actionPlanModalOpen, setActionPlanModalOpen] = useState(false);
+  const [addActionPlanModalOpen, setAddActionPlanModalOpen] = useState(false);
+  const [editReportModalOpen, setEditReportModalOpen] = useState(false);
 
   return (
     <Box>
@@ -20,8 +22,10 @@ function MainPage({ setMode, mode }) {
       >
         <Sidebar setMode={setMode} mode={mode} />
         <Feed
-          actionPlanModalOpen={actionPlanModalOpen}
-          setActionPlanModalOpen={setActionPlanModalOpen}
+          addActionPlanModalOpen={addActionPlanModalOpen}
+          setAddActionPlanModalOpen={setAddActionPlanModalOpen}
+          editReportModalOpen={editReportModalOpen}
+          setEditReportModalOpen={setEditReportModalOpen}
         />
         <Rightbar />
       </Stack>
@@ -32,8 +36,12 @@ function MainPage({ setMode, mode }) {
       >
         <AddReport />
         <AddActionPlan
-          open={actionPlanModalOpen}
-          setOpen={setActionPlanModalOpen}
+          open={addActionPlanModalOpen}
+          setOpen={setAddActionPlanModalOpen}
+        />
+        <EditReport
+          open={editReportModalOpen}
+          setOpen={setEditReportModalOpen}
         />
       </Box>
     </Box>

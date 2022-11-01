@@ -25,8 +25,10 @@ const ReportCard = ({
   medicationTaken,
   medicalCompanyInvolved,
   files,
-  actionPlanModalOpen,
-  setActionPlanModalOpen,
+  addActionPlanModalOpen,
+  setAddActionPlanModalOpen,
+  editReportModalOpen,
+  setEditReportModalOpen,
 }) => {
   return (
     <Card
@@ -76,13 +78,16 @@ const ReportCard = ({
         sx={{ display: "flex", justifyContent: "space-between" }}
       >
         <Tooltip title="Edit Report">
-          <IconButton aria-label="edit report">
+          <IconButton
+            aria-label="edit report"
+            onClick={(e) => setEditReportModalOpen(true)}
+          >
             <Edit />
           </IconButton>
         </Tooltip>
         <Tooltip
           title="Create Action Plan"
-          onClick={(e) => setActionPlanModalOpen(true)}
+          onClick={(e) => setAddActionPlanModalOpen(true)}
         >
           <IconButton aria-label="create action plan">
             <Summarize />
