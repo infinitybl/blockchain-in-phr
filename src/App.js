@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 
@@ -13,7 +13,11 @@ import ErrorPage from "./pages/ErrorPage";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
+import UserTypeContext from "./context/UserTypeContext"
+
 function App() {
+  const [userType, setUserType] = useState("patient");
+
   useEffect(() => {
     document.title = "AERS";
   });
@@ -27,25 +31,27 @@ function App() {
   });
 
   return (
-    <LocalizationProvider dateAdapter={AdapterMoment}>
-      <ThemeProvider theme={darkTheme}>
-        <Box bgcolor={"background.default"} color={"text.primary"}>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Homepage />} />
-              <Route path="login" element={<Login />} />
-              <Route path="signup" element={<Signup />} />
-              <Route
-                path="main"
-                element={<MainPage mode={mode} setMode={setMode} />}
-              />
-              <Route path="profile" element={<ProfilePage />} />
-              <Route path="*" element={<ErrorPage />} />
-            </Routes>
-          </BrowserRouter>
-        </Box>
-      </ThemeProvider>
-    </LocalizationProvider>
+    <UserTypeContext.Provider value={[userType, setUserType]}>
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <ThemeProvider theme={darkTheme}>
+          <Box bgcolor={"background.default"} color={"text.primary"}>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Homepage />} />
+                <Route path="login" element={<Login />} />
+                <Route path="signup" element={<Signup />} />
+                <Route
+                  path="main"
+                  element={<MainPage mode={mode} setMode={setMode} />}
+                />
+                <Route path="profile" element={<ProfilePage />} />
+                <Route path="*" element={<ErrorPage />} />
+              </Routes>
+            </BrowserRouter>
+          </Box>
+        </ThemeProvider>
+      </LocalizationProvider>
+    </UserTypeContext.Provider>
   );
 }
 

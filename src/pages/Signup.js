@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { UserTypeContext } from "../context/UserTypeContext";
 
 import {
   Avatar,
@@ -29,6 +30,8 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { MuiTelInput } from "mui-tel-input";
 
+import Web3Setup from '../web3';
+
 function Copyright(props) {
   return (
     <Typography
@@ -47,7 +50,10 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Signup() {
-  const [userType, setUserType] = useState("patient");
+  const [contracts, setContracts] = useState(null);
+  const [account, setAccount] = useState("");
+
+  const [userType, setUserType] = useContext(UserTypeContext);
   const [phone, setPhone] = useState("");
 
   const handlePhoneChange = (newPhone) => {
@@ -60,14 +66,96 @@ export default function Signup() {
     setSelectedDate(newDate);
   };
 
-  const handleSubmit = (event) => {
+  const [bloodType, setBloodType] = useState("O-");
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    let requestData = {};
+    if (userType === "patient") {
+      console.log({
+        firstName: data.get("firstName"),
+        lastName: data.get("lastName"),
+        phone: phone,
+        email: data.get("email"),
+        gender: data.get("gender"),
+        dateOfBirth: selectedDate,
+        bloodType: bloodType,
+        homeAddress: data.get("homeAddress")
+      });
+      requestData = {
+        firstName: data.get("firstName"),
+        lastName: data.get("lastName"),
+        phone: phone,
+        email: data.get("email"),
+        gender: data.get("gender"),
+        dateOfBirth: selectedDate,
+        bloodType: bloodType,
+        homeAddress: data.get("homeAddress")
+      };
+      try {
+        const response = await contracts.patientContract.methods.addPatient(requestData.firstName, requestData.lastName, requestData.phone, requestData.email, requestData.gender, requestData.dateOfBirth, requestData.bloodType, requestData.homeAddress).send({ from: account });
+        console.log(response);
+      }
+      catch (e) {
+        alert("Error");
+      }
+    } else if (userType === "medicalCompany") {
+      console.log({
+        companyName: data.get("companyName"),
+        companyType: data.get("companyType"),
+        phone: phone,
+        email: data.get("email"),
+        locationAddress: data.get("locationAddress"),
+      });
+      requestData = {
+        companyName: data.get("companyName"),
+        companyType: data.get("companyType"),
+        phone: phone,
+        email: data.get("email"),
+        locationAddress: data.get("locationAddress"),
+      };
+      try {
+        const response = await contracts.medicalCompanyContract.methods.addMedicalCompany(requestData.companyName, requestData.companyType, requestData.phone, requestData.email, requestData.locationAddress, account).send({ from: account });
+        console.log(response);
+      }
+      catch (e) {
+        alert("Error");
+      }
+    } else if (userType === "government") {
+      console.log({
+        name: data.get("healthMinistryName"),
+        country: data.get("country"),
+        phone: phone,
+        email: data.get("email"),
+        locationAddress: data.get("locationAddress"),
+      });
+      requestData = {
+        name: data.get("healthMinistryName"),
+        country: data.get("country"),
+        phone: phone,
+        email: data.get("email"),
+        locationAddress: data.get("locationAddress"),
+      };
+      try {
+        const response = await contracts.governmentContract.methods.addGovernment(requestData.name, requestData.country, requestData.phone, requestData.email, requestData.locationAddress, account).send({ from: account });
+        console.log(response);
+      }
+      catch (e) {
+        alert("Error");
+      }
+    }
   };
+
+  useEffect(async () => {
+    const [
+      contracts,
+      accounts,
+    ] = await Web3Setup();
+    setContracts(contracts);
+    setAccount(accounts[0]);
+    console.log("Account: " + account);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -210,6 +298,10 @@ export default function Signup() {
                           name: "blood-type",
                           id: "uncontrolled-native",
                         }}
+                        onChange={(e) => {
+                          e.preventDefault();
+                          setBloodType(e.target.value);
+                        }}
                       >
                         <option value={"O-"}>O-</option>
                         <option value={"O+"}>O+</option>
@@ -330,15 +422,6 @@ export default function Signup() {
                   </Grid>
                 </>
               )}
-
-              {/* <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid> */}
             </Grid>
             <Button
               type="submit"

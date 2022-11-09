@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+import { UserTypeContext } from "../context/UserTypeContext";
 
 import {
   Avatar,
@@ -29,13 +31,28 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { MuiTelInput } from "mui-tel-input";
 
+import Web3Setup from '../web3';
+
 const theme = createTheme();
 
 export default function ProfilePage() {
-  const [userType, setUserType] = useState("patient");
+  const [contracts, setContracts] = useState(null);
+  const [account, setAccount] = useState("");
+
+  const [userType, setUserType] = useContext(UserTypeContext);
   const [phone, setPhone] = useState("");
 
   const [selectedDate, setSelectedDate] = useState(moment());
+
+  useEffect(async () => {
+    const [
+      contracts,
+      accounts,
+    ] = await Web3Setup();
+    setContracts(contracts);
+    setAccount(accounts[0]);
+    console.log("Account: " + account);
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>

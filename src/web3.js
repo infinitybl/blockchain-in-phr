@@ -1,9 +1,9 @@
 import Web3 from "web3";
-import Government from "../abis/Government.json";
-import MedicalCompany from "../abis/MedicalCompany.json";
-import Patient from "../abis/Patient.json";
+import Government from "./abis/Government.json";
+import MedicalCompany from "./abis/MedicalCompany.json";
+import Patient from "./abis/Patient.json";
 
-async function Web3() {
+async function Web3Setup() {
   await window.ethereum.enable();
   const web3 = new Web3(Web3.givenProvider || "http://localhost:8545");
   const accounts = await web3.eth.getAccounts();
@@ -23,12 +23,17 @@ async function Web3() {
     Patient.abi,
     patientNetworkData.address
   );
-  return [
+
+  const contracts = {
     governmentContract,
     medicalCompanyContract,
-    patientContract,
+    patientContract
+  };
+
+  return [
+    contracts,
     accounts,
   ];
 }
 
-export default Web3;
+export default Web3Setup;
