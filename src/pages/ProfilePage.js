@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
-import { UserTypeContext } from "../context/UserTypeContext";
+import UserTypeContext from "../context/UserTypeContext";
 
 import {
   Avatar,
@@ -31,7 +31,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { MuiTelInput } from "mui-tel-input";
 
-import Web3Setup from '../web3';
+import Web3Setup from "../web3";
 
 const theme = createTheme();
 
@@ -45,10 +45,7 @@ export default function ProfilePage() {
   const [selectedDate, setSelectedDate] = useState(moment());
 
   useEffect(async () => {
-    const [
-      contracts,
-      accounts,
-    ] = await Web3Setup();
+    const [contracts, accounts] = await Web3Setup();
     setContracts(contracts);
     setAccount(accounts[0]);
     console.log("Account: " + account);

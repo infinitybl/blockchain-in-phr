@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { UserTypeContext } from "../context/UserTypeContext";
+import React, { useState, useEffect, useContext } from "react";
+import UserTypeContext from "../context/UserTypeContext";
 
 import {
   Avatar,
@@ -30,7 +30,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import { MuiTelInput } from "mui-tel-input";
 
-import Web3Setup from '../web3';
+import Web3Setup from "../web3";
 
 function Copyright(props) {
   return (
@@ -81,7 +81,7 @@ export default function Signup() {
         gender: data.get("gender"),
         dateOfBirth: selectedDate,
         bloodType: bloodType,
-        homeAddress: data.get("homeAddress")
+        homeAddress: data.get("homeAddress"),
       });
       requestData = {
         firstName: data.get("firstName"),
@@ -91,13 +91,23 @@ export default function Signup() {
         gender: data.get("gender"),
         dateOfBirth: selectedDate,
         bloodType: bloodType,
-        homeAddress: data.get("homeAddress")
+        homeAddress: data.get("homeAddress"),
       };
       try {
-        const response = await contracts.patientContract.methods.addPatient(requestData.firstName, requestData.lastName, requestData.phone, requestData.email, requestData.gender, requestData.dateOfBirth, requestData.bloodType, requestData.homeAddress).send({ from: account });
+        const response = await contracts.patientContract.methods
+          .addPatient(
+            requestData.firstName,
+            requestData.lastName,
+            requestData.phone,
+            requestData.email,
+            requestData.gender,
+            requestData.dateOfBirth,
+            requestData.bloodType,
+            requestData.homeAddress
+          )
+          .send({ from: account });
         console.log(response);
-      }
-      catch (e) {
+      } catch (e) {
         alert("Error");
       }
     } else if (userType === "medicalCompany") {
@@ -116,10 +126,18 @@ export default function Signup() {
         locationAddress: data.get("locationAddress"),
       };
       try {
-        const response = await contracts.medicalCompanyContract.methods.addMedicalCompany(requestData.companyName, requestData.companyType, requestData.phone, requestData.email, requestData.locationAddress, account).send({ from: account });
+        const response = await contracts.medicalCompanyContract.methods
+          .addMedicalCompany(
+            requestData.companyName,
+            requestData.companyType,
+            requestData.phone,
+            requestData.email,
+            requestData.locationAddress,
+            account
+          )
+          .send({ from: account });
         console.log(response);
-      }
-      catch (e) {
+      } catch (e) {
         alert("Error");
       }
     } else if (userType === "government") {
@@ -138,20 +156,25 @@ export default function Signup() {
         locationAddress: data.get("locationAddress"),
       };
       try {
-        const response = await contracts.governmentContract.methods.addGovernment(requestData.name, requestData.country, requestData.phone, requestData.email, requestData.locationAddress, account).send({ from: account });
+        const response = await contracts.governmentContract.methods
+          .addGovernment(
+            requestData.name,
+            requestData.country,
+            requestData.phone,
+            requestData.email,
+            requestData.locationAddress,
+            account
+          )
+          .send({ from: account });
         console.log(response);
-      }
-      catch (e) {
+      } catch (e) {
         alert("Error");
       }
     }
   };
 
   useEffect(async () => {
-    const [
-      contracts,
-      accounts,
-    ] = await Web3Setup();
+    const [contracts, accounts] = await Web3Setup();
     setContracts(contracts);
     setAccount(accounts[0]);
     console.log("Account: " + account);
