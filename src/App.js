@@ -13,10 +13,12 @@ import ErrorPage from "./pages/ErrorPage";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
-import UserTypeContext from "./context/UserTypeContext"
+import UserTypeContext from "./context/UserTypeContext";
+import AuthContext from "./context/AuthContext";
 
 function App() {
   const [userType, setUserType] = useState("patient");
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     document.title = "AERS";
@@ -31,27 +33,29 @@ function App() {
   });
 
   return (
-    <UserTypeContext.Provider value={[userType, setUserType]}>
-      <LocalizationProvider dateAdapter={AdapterMoment}>
-        <ThemeProvider theme={darkTheme}>
-          <Box bgcolor={"background.default"} color={"text.primary"}>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Homepage />} />
-                <Route path="login" element={<Login />} />
-                <Route path="signup" element={<Signup />} />
-                <Route
-                  path="main"
-                  element={<MainPage mode={mode} setMode={setMode} />}
-                />
-                <Route path="profile" element={<ProfilePage />} />
-                <Route path="*" element={<ErrorPage />} />
-              </Routes>
-            </BrowserRouter>
-          </Box>
-        </ThemeProvider>
-      </LocalizationProvider>
-    </UserTypeContext.Provider>
+    <AuthContext.Provider value={[isAuth, setIsAuth]}>
+      <UserTypeContext.Provider value={[userType, setUserType]}>
+        <LocalizationProvider dateAdapter={AdapterMoment}>
+          <ThemeProvider theme={darkTheme}>
+            <Box bgcolor={"background.default"} color={"text.primary"}>
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Homepage />} />
+                  <Route path="login" element={<Login />} />
+                  <Route path="signup" element={<Signup />} />
+                  <Route
+                    path="main"
+                    element={<MainPage mode={mode} setMode={setMode} />}
+                  />
+                  <Route path="profile" element={<ProfilePage />} />
+                  <Route path="*" element={<ErrorPage />} />
+                </Routes>
+              </BrowserRouter>
+            </Box>
+          </ThemeProvider>
+        </LocalizationProvider>
+      </UserTypeContext.Provider>
+    </AuthContext.Provider>
   );
 }
 

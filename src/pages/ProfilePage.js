@@ -44,11 +44,46 @@ export default function ProfilePage() {
 
   const [selectedDate, setSelectedDate] = useState(moment());
 
-  useEffect(async () => {
-    const [contracts, accounts] = await Web3Setup();
-    setContracts(contracts);
-    setAccount(accounts[0]);
-    console.log("Account: " + account);
+  const handleDateChange = (newDate) => {};
+
+  const [profileData, setProfileData] = useState({});
+
+  const [bloodType, setBloodType] = useState("O-");
+
+  useEffect(() => {
+    async function setup() {
+      const [contracts, accounts] = await Web3Setup();
+      setContracts(contracts);
+      setAccount(accounts[0]);
+      console.log("Account: " + accounts[0]);
+      if (userType === "patient") {
+        const response = await contracts.patientContract.methods
+          .getPatientProfile(accounts[0])
+          .call({ from: accounts[0] });
+        console.log("profileData: " + JSON.stringify(response, null, 2));
+        setProfileData(response);
+        setPhone(response["_phone"] ? response["_phone"] : "");
+        setSelectedDate(
+          response["_dateOfBirth"] ? response["_dateOfBirth"] : ""
+        );
+        setBloodType(response["_bloodType"] ? response["_bloodType"] : "");
+      } else if (userType === "medicalCompany") {
+        const response = await contracts.medicalCompanyContract.methods
+          .getMedicalCompanyProfile(accounts[0])
+          .call({ from: accounts[0] });
+        console.log("profileData: " + JSON.stringify(response, null, 2));
+        setProfileData(response);
+        setPhone(response["_phone"] ? response["_phone"] : "");
+      } else if (userType === "government") {
+        const response = await contracts.governmentContract.methods
+          .getGovernmentProfile(accounts[0])
+          .call({ from: accounts[0] });
+        console.log("profileData: " + JSON.stringify(response, null, 2));
+        setProfileData(response);
+        setPhone(response["_phone"] ? response["_phone"] : "");
+      }
+    }
+    setup();
   }, []);
 
   return (
@@ -90,7 +125,7 @@ export default function ProfilePage() {
           </Box>
           <Box component="form" noValidate sx={{ mt: 3, mb: 8 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -102,7 +137,7 @@ export default function ProfilePage() {
                     readOnly: true,
                   }}
                 />
-              </Grid>
+              </Grid> */}
               {userType === "patient" && (
                 <>
                   <Grid item xs={12} sm={6}>
@@ -113,6 +148,11 @@ export default function ProfilePage() {
                       fullWidth
                       id="firstName"
                       label="First Name"
+                      value={
+                        profileData["_firstName"]
+                          ? profileData["_firstName"]
+                          : ""
+                      }
                       autoFocus
                       inputProps={{
                         readOnly: true,
@@ -126,6 +166,9 @@ export default function ProfilePage() {
                       id="lastName"
                       label="Last Name"
                       name="lastName"
+                      value={
+                        profileData["_lastName"] ? profileData["_lastName"] : ""
+                      }
                       autoComplete="family-name"
                       inputProps={{
                         readOnly: true,
@@ -136,6 +179,7 @@ export default function ProfilePage() {
                     <DatePicker
                       label="Date of Birth"
                       value={selectedDate}
+                      onChange={handleDateChange}
                       renderInput={(params) => <TextField {...params} />}
                       inputProps={{
                         readOnly: true,
@@ -157,6 +201,7 @@ export default function ProfilePage() {
                       fullWidth
                       id="email"
                       name="email"
+                      value={profileData["_email"] ? profileData["_email"] : ""}
                       label="Email Address"
                       autoComplete="email"
                       inputProps={{
@@ -171,6 +216,9 @@ export default function ProfilePage() {
                       id="gender"
                       name="gender"
                       label="Gender"
+                      value={
+                        profileData["_gender"] ? profileData["_gender"] : ""
+                      }
                       autoComplete="gender"
                       inputProps={{
                         readOnly: true,
@@ -184,6 +232,11 @@ export default function ProfilePage() {
                       id="home-address"
                       name="homeAddress"
                       label="Home Address"
+                      value={
+                        profileData["_homeAddress"]
+                          ? profileData["_homeAddress"]
+                          : ""
+                      }
                       autoComplete="home-address"
                       inputProps={{
                         readOnly: true,
@@ -199,7 +252,7 @@ export default function ProfilePage() {
                         Blood Type
                       </InputLabel>
                       <NativeSelect
-                        defaultValue={"O-"}
+                        defaultValue={bloodType}
                         inputProps={{
                           name: "blood-type",
                           id: "uncontrolled-native",
@@ -229,6 +282,11 @@ export default function ProfilePage() {
                       fullWidth
                       id="companyName"
                       label="Company Name"
+                      value={
+                        profileData["_companyName"]
+                          ? profileData["_companyName"]
+                          : ""
+                      }
                       autoFocus
                       inputProps={{
                         readOnly: true,
@@ -239,6 +297,11 @@ export default function ProfilePage() {
                     <TextField
                       autoComplete="company-type"
                       name="companyType"
+                      value={
+                        profileData["_companyType"]
+                          ? profileData["_companyType"]
+                          : ""
+                      }
                       required
                       fullWidth
                       id="companyType"
@@ -265,6 +328,7 @@ export default function ProfilePage() {
                       id="email"
                       name="email"
                       label="Email Address"
+                      value={profileData["_email"] ? profileData["_email"] : ""}
                       autoComplete="email"
                       inputProps={{
                         readOnly: true,
@@ -278,6 +342,11 @@ export default function ProfilePage() {
                       id="location-address"
                       name="locationAddress"
                       label="Office Location Address"
+                      value={
+                        profileData["_locationAddress"]
+                          ? profileData["locationAddress"]
+                          : ""
+                      }
                       autoComplete="location-address"
                       inputProps={{
                         readOnly: true,
@@ -296,6 +365,7 @@ export default function ProfilePage() {
                       fullWidth
                       id="healthMinistryName"
                       label="Health Ministry Name"
+                      value={profileData["_name"] ? profileData["_name"] : ""}
                       autoFocus
                       inputProps={{
                         readOnly: true,
@@ -310,6 +380,9 @@ export default function ProfilePage() {
                       fullWidth
                       id="country"
                       label="Country"
+                      value={
+                        profileData["_country"] ? profileData["_country"] : ""
+                      }
                       autoFocus
                       inputProps={{
                         readOnly: true,
@@ -332,6 +405,7 @@ export default function ProfilePage() {
                       id="email"
                       name="email"
                       label="Email Address"
+                      value={profileData["_email"] ? profileData["_email"] : ""}
                       autoComplete="email"
                       inputProps={{
                         readOnly: true,
@@ -345,6 +419,11 @@ export default function ProfilePage() {
                       id="location-address"
                       name="locationAddress"
                       label="Office Location Address"
+                      value={
+                        profileData["_locationAddress"]
+                          ? profileData["_locationAddress"]
+                          : ""
+                      }
                       autoComplete="location-address"
                       inputProps={{
                         readOnly: true,

@@ -18,7 +18,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -31,7 +32,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -123,7 +125,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -177,7 +180,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -291,7 +295,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_country\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_phone\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_locationAddress\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"}],\"name\":\"addGovernment\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_actionPlanCreationDate\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_actionPlanDescription\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_clinicalOutcome\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_contributingFactors\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_suspectedMedication\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_actionToTake\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_medicalCompanyInvolved\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_ipfsHash\",\"type\":\"string\"}],\"name\":\"addGovernmentActionPlan\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"}],\"name\":\"getGovernmentActionPlans\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"actionPlanCreationDate\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"actionPlanDescription\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"clinicalOutcome\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"contributingFactors\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"suspectedMedication\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"actionToTake\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"medicalCompanyInvolved\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"}],\"internalType\":\"struct Government.ActionPlan[]\",\"name\":\"_actionPlans\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"}],\"name\":\"getGovernmentById\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"country\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"phone\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"locationAddress\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"isApproved\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_address\",\"type\":\"address\"}],\"name\":\"getGovernmentProfile\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"country\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"phone\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"locationAddress\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"bool\",\"name\":\"isApproved\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"governmentList\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"governmentListIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Contract.sol\":\"Government\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Contract.sol\":{\"keccak256\":\"0x1fc49e2fa237dfb86cc9bc114fd4f7d30916be7951e64aa4cbbbb9f72d797e7d\",\"urls\":[\"bzz-raw://d0d0cda403c0ededab5a5a52be9fe38a73d2e70b8201ed5c8599bb0146083f73\",\"dweb:/ipfs/QmdR518ZqKvZsvnHdG8G64gRnnXDuRZ2v31bo3FUFTBNwa\"]}},\"version\":1}",
@@ -35422,12 +35427,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x7c604027198c5EB63A312FB6c6C4f0ca6c8e8384",
-      "transactionHash": "0x921c7d51eba6c2c95979cf76044aa557a45e89084353fec7189bcde0a5603002"
+      "address": "0x9eB3f91BC816b516384cc6af4F9D5f4321Ea3331",
+      "transactionHash": "0x1231e0f3dec39dae8564490b2deea825b41ef4768c98ee9994621b38b10f7af7"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-11-08T06:01:08.034Z",
+  "updatedAt": "2022-11-11T05:25:48.796Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

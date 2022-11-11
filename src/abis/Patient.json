@@ -12,7 +12,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -119,7 +120,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -223,7 +225,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_firstName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_lastName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_phone\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_gender\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_dateOfBirth\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_bloodType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_homeAddress\",\"type\":\"string\"}],\"name\":\"addPatient\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_incidentDate\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_incidentDescription\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_incidentCategory\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_careSetting\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_medicationTaken\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_medicalCompanyInvolved\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_ipfsHash\",\"type\":\"string\"}],\"name\":\"addPatientReport\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"}],\"name\":\"getPatientProfile\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"_id\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"_firstName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_lastName\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_phone\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_email\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_gender\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_dateOfBirth\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_bloodType\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_homeAddress\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_addr\",\"type\":\"address\"}],\"name\":\"getPatientReports\",\"outputs\":[{\"components\":[{\"internalType\":\"string\",\"name\":\"incidentDate\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"incidentDescription\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"incidentCategory\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"careSetting\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"medicationTaken\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"medicalCompanyInvolved\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"ipfsHash\",\"type\":\"string\"}],\"internalType\":\"struct Patient.Report[]\",\"name\":\"_reports\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"patientListIndex\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/Contract.sol\":\"Patient\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Contract.sol\":{\"keccak256\":\"0x1fc49e2fa237dfb86cc9bc114fd4f7d30916be7951e64aa4cbbbb9f72d797e7d\",\"urls\":[\"bzz-raw://d0d0cda403c0ededab5a5a52be9fe38a73d2e70b8201ed5c8599bb0146083f73\",\"dweb:/ipfs/QmdR518ZqKvZsvnHdG8G64gRnnXDuRZ2v31bo3FUFTBNwa\"]}},\"version\":1}",
@@ -34005,12 +34008,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xec910D3142b6d31D2fE05CBb1105cc5ff22Bd214",
-      "transactionHash": "0x32b7e117ca1970386af09d5e09dfa26b44e531cb0a52c97fd700579cff506a40"
+      "address": "0x4654BCCf58c744b39439856AaD6AED2490A26310",
+      "transactionHash": "0x7c3a151dad1b8f142e195c4c9eef0d46cfb707ed2539c7d898df19de24fae8f3"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-11-08T06:01:08.063Z",
+  "updatedAt": "2022-11-11T05:25:48.826Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

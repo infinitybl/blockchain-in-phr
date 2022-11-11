@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import UserTypeContext from "../context/UserTypeContext";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   Avatar,
   Button,
@@ -50,6 +52,7 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Signup() {
+  const navigate = useNavigate();
   const [contracts, setContracts] = useState(null);
   const [account, setAccount] = useState("");
 
@@ -63,7 +66,8 @@ export default function Signup() {
   const [selectedDate, setSelectedDate] = useState(moment());
 
   const handleDateChange = (newDate) => {
-    setSelectedDate(newDate);
+    console.log("newDate: " + newDate.toString());
+    setSelectedDate(newDate.toString());
   };
 
   const [bloodType, setBloodType] = useState("O-");
@@ -107,6 +111,7 @@ export default function Signup() {
           )
           .send({ from: account });
         console.log(response);
+        navigate("/main");
       } catch (e) {
         alert("Error");
       }
@@ -137,6 +142,7 @@ export default function Signup() {
           )
           .send({ from: account });
         console.log(response);
+        navigate("/main");
       } catch (e) {
         alert("Error");
       }
@@ -167,17 +173,21 @@ export default function Signup() {
           )
           .send({ from: account });
         console.log(response);
+        navigate("/main");
       } catch (e) {
         alert("Error");
       }
     }
   };
 
-  useEffect(async () => {
-    const [contracts, accounts] = await Web3Setup();
-    setContracts(contracts);
-    setAccount(accounts[0]);
-    console.log("Account: " + account);
+  useEffect(() => {
+    async function setup() {
+      const [contracts, accounts] = await Web3Setup();
+      setContracts(contracts);
+      setAccount(accounts[0]);
+      console.log("Account: " + account);
+    }
+    setup();
   }, []);
 
   return (
@@ -229,7 +239,7 @@ export default function Signup() {
             sx={{ mt: 3 }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
@@ -238,7 +248,7 @@ export default function Signup() {
                   label="MetaMask Wallet Address"
                   autoComplete="metamask-wallet-address"
                 />
-              </Grid>
+              </Grid> */}
               {userType === "patient" && (
                 <>
                   <Grid item xs={12} sm={6}>
@@ -316,7 +326,7 @@ export default function Signup() {
                         Blood Type
                       </InputLabel>
                       <NativeSelect
-                        defaultValue={"O-"}
+                        defaultValue={bloodType}
                         inputProps={{
                           name: "blood-type",
                           id: "uncontrolled-native",
