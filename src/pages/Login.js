@@ -1,4 +1,6 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
+
+import { useNavigate } from "react-router-dom";
 
 import {
   Avatar,
@@ -24,6 +26,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Navbar from "../components/Navbar";
 
+import Web3Setup from "../web3";
+
 function Copyright(props) {
   return (
     <Typography
@@ -42,6 +46,10 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function Login() {
+  const navigate = useNavigate();
+  const [contracts, setContracts] = useState(null);
+  const [account, setAccount] = useState("");
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -50,6 +58,25 @@ export default function Login() {
       password: data.get("password"),
     });
   };
+
+  useEffect(() => {
+    async function setup() {
+      try {
+        const [contracts, accounts] = await Web3Setup();
+        setContracts(contracts);
+        setAccount(accounts[0]);
+        console.log("Account: " + accounts[0]);
+        if (accounts[0]) {
+          navigate("/main");
+        } else {
+          alert("Error");
+        }
+      } catch (err) {
+        alert("Error");
+      }
+    }
+    setup();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
