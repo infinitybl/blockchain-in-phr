@@ -328,7 +328,7 @@ export default function Signup() {
                       <NativeSelect
                         defaultValue={bloodType}
                         inputProps={{
-                          name: "blood-type",
+                          name: "bloodType",
                           id: "uncontrolled-native",
                         }}
                         onChange={(e) => {

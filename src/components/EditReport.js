@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Add as AddIcon,
   Close,
@@ -25,7 +25,14 @@ import { Box } from "@mui/system";
 import moment from "moment";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-const SytledModal = styled(Modal)({
+import Web3Setup from "../web3";
+
+import ipfsClient from "../ipfs";
+import { Buffer } from "buffer";
+
+import { encrypt, decrypt } from "../crypto";
+
+const StyledModal = styled(Modal)({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -39,15 +46,104 @@ const UserBox = styled(Box)({
 });
 
 const EditReport = ({ open, setOpen }) => {
+  const [contracts, setContracts] = useState(null);
+  const [account, setAccount] = useState("");
+
+  const [fileBuffer, setFileBuffer] = useState(null);
+
   const [selectedDate, setSelectedDate] = useState(moment());
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
   };
 
+  const [medicalCompanyInvolved, setMedicalCompanyInvolved] =
+    useState("rexall");
+
+  useEffect(() => {
+    async function setup() {
+      const [contracts, accounts] = await Web3Setup();
+      setContracts(contracts);
+      setAccount(accounts[0]);
+      console.log("Account: " + account);
+    }
+    setup();
+  }, []);
+
+  const captureFile = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const file = e.target.files[0];
+    let fileReader = new window.FileReader();
+    fileReader.readAsArrayBuffer(file);
+    fileReader.onloadend = () => convertToBuffer(fileReader);
+  };
+
+  const convertToBuffer = async (reader) => {
+    const buffer = await Buffer.from(reader.result);
+    setFileBuffer(buffer);
+    console.log("fileBuffer: " + fileBuffer);
+  };
+
+  const handleEditReportSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    try {
+      let requestData = {};
+      console.log({
+        incidentDate: selectedDate,
+        incidentDescription: data.get("incidentDescription"),
+        incidentCategory: data.get("incidentCategory"),
+        careSetting: data.get("careSetting"),
+        medicationTaken: data.get("medicationTaken"),
+        medicalCompanyInvolved: medicalCompanyInvolved,
+      });
+      requestData = {
+        incidentDate: selectedDate,
+        incidentDescription: data.get("incidentDescription"),
+        incidentCategory: data.get("incidentCategory"),
+        careSetting: data.get("careSetting"),
+        medicationTaken: data.get("medicationTaken"),
+        medicalCompanyInvolved: medicalCompanyInvolved,
+      };
+
+      let ipfsHash = "";
+
+      if (fileBuffer) {
+        const { cid } = await ipfsClient.add(fileBuffer);
+        let url = "https://ipfs.io/ipfs/" + cid;
+
+        console.log("File url: " + url);
+
+        ipfsHash = encrypt(url);
+
+        console.log("Decrypted ipfsHash: " + decrypt(ipfsHash));
+      }
+
+      const response = await contracts.patientContract.methods
+        .addPatientReport(
+          account,
+          requestData.incidentDate,
+          requestData.incidentDescription,
+          requestData.incidentCategory,
+          requestData.careSetting,
+          requestData.medicationTaken,
+          requestData.medicalCompanyInvolved,
+          ipfsHash
+        )
+        .send({ from: account });
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+      alert("An error occured when editing the incident report");
+    }
+
+    setOpen(false);
+  };
+
   return (
     <>
-      <SytledModal
+      <StyledModal
         open={open}
         onClose={(e) => setOpen(false)}
         aria-labelledby="modal-modal-title"
@@ -61,6 +157,9 @@ const EditReport = ({ open, setOpen }) => {
           p={3}
           borderRadius={1}
           sx={{ overflow: "auto" }}
+          component="form"
+          noValidate
+          onSubmit={handleEditReportSubmit}
         >
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography
@@ -145,15 +244,22 @@ const EditReport = ({ open, setOpen }) => {
                 name: "medical-company-involved",
                 id: "uncontrolled-native",
               }}
+              onChange={(e) => {
+                e.preventDefault();
+                setMedicalCompanyInvolved(e.target.value);
+              }}
             >
               <option value={"rexall"}>Rexall Pharmacy</option>
             </NativeSelect>
           </FormControl>
-          <Button variant="contained" component="label" sx={{ marginTop: 2 }}>
-            <FilePresent />
-            Upload Files
-            <input hidden multiple type="file" />
-          </Button>
+          <TextField
+            sx={{ marginTop: 4 }}
+            name="file"
+            type="file"
+            label="Upload File"
+            InputLabelProps={{ shrink: true }}
+            onChange={captureFile}
+          ></TextField>
           <ButtonGroup
             fullWidth
             variant="contained"
@@ -163,7 +269,7 @@ const EditReport = ({ open, setOpen }) => {
             <Button fullWidth>Edit</Button>
           </ButtonGroup>
         </Box>
-      </SytledModal>
+      </StyledModal>
     </>
   );
 };

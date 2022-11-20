@@ -13,7 +13,7 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Add as AddIcon,
   Close,
@@ -25,9 +25,14 @@ import { Box } from "@mui/system";
 import moment from "moment";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-import ChangeTheme from "../components/ChangeTheme";
+import Web3Setup from "../web3";
 
-const SytledModal = styled(Modal)({
+import ipfsClient from "../ipfs";
+import { Buffer } from "buffer";
+
+import { encrypt, decrypt } from "../crypto";
+
+const StyledModal = styled(Modal)({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -40,16 +45,107 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const AddActionPlan = ({ open, setOpen }) => {
+const AddActionPlan = ({ reportId, open, setOpen }) => {
+  const [contracts, setContracts] = useState(null);
+  const [account, setAccount] = useState("");
+
+  const [fileBuffer, setFileBuffer] = useState(null);
+
   const [selectedDate, setSelectedDate] = useState(moment());
 
   const handleDateChange = (newDate) => {
     setSelectedDate(newDate);
   };
 
+  const [medicalCompanyInvolved, setMedicalCompanyInvolved] =
+    useState("rexall");
+
+  useEffect(() => {
+    async function setup() {
+      const [contracts, accounts] = await Web3Setup();
+      setContracts(contracts);
+      setAccount(accounts[0]);
+      console.log("Account: " + account);
+    }
+    setup();
+  }, []);
+
+  const captureFile = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const file = e.target.files[0];
+    let fileReader = new window.FileReader();
+    fileReader.readAsArrayBuffer(file);
+    fileReader.onloadend = () => convertToBuffer(fileReader);
+  };
+
+  const convertToBuffer = async (reader) => {
+    const buffer = await Buffer.from(reader.result);
+    setFileBuffer(buffer);
+    console.log("fileBuffer: " + fileBuffer);
+  };
+
+  const handleAddActionPlanSubmit = async (event) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    try {
+      let requestData = {};
+      console.log({
+        reportId: reportId,
+        actionPlanCreationDate: selectedDate,
+        actionPlanDescription: data.get("actionPlanDescription"),
+        clinicalOutcome: data.get("clinicalOutcome"),
+        contributingFactors: data.get("contributingFactors"),
+        suspectedMedication: data.get("suspectedMedication"),
+        actionToTake: data.get("actionToTake"),
+        medicalCompanyInvolved: medicalCompanyInvolved,
+      });
+      requestData = {
+        reportId: reportId,
+        actionPlanCreationDate: selectedDate,
+        actionPlanDescription: data.get("actionPlanDescription"),
+        clinicalOutcome: data.get("clinicalOutcome"),
+        contributingFactors: data.get("contributingFactors"),
+        suspectedMedication: data.get("suspectedMedication"),
+        actionToTake: data.get("actionToTake"),
+        medicalCompanyInvolved: medicalCompanyInvolved,
+      };
+
+      let ipfsHash = "";
+
+      if (fileBuffer) {
+        const { cid } = await ipfsClient.add(fileBuffer);
+        let url = "https://ipfs.io/ipfs/" + cid;
+
+        console.log("File url: " + url);
+
+        ipfsHash = encrypt(url);
+        console.log("Decrypted ipfsHash: " + decrypt(ipfsHash));
+      }
+
+      const response = await contracts.patientContract.methods
+        .addPatientReport(
+          account,
+          requestData.incidentDate,
+          requestData.incidentDescription,
+          requestData.incidentCategory,
+          requestData.careSetting,
+          requestData.medicationTaken,
+          ipfsHash
+        )
+        .send({ from: account });
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+      alert("An error occured when adding a new incident report");
+    }
+
+    setOpen(false);
+  };
+
   return (
     <>
-      <SytledModal
+      <StyledModal
         open={open}
         onClose={(e) => setOpen(false)}
         aria-labelledby="modal-modal-title"
@@ -63,6 +159,9 @@ const AddActionPlan = ({ open, setOpen }) => {
           p={3}
           borderRadius={1}
           sx={{ overflow: "auto" }}
+          component="form"
+          noValidate
+          onSubmit={handleAddActionPlanSubmit}
         >
           <Box sx={{ display: "flex", justifyContent: "space-between" }}>
             <Typography
@@ -92,7 +191,7 @@ const AddActionPlan = ({ open, setOpen }) => {
             id="standard-multiline-static"
             multiline
             rows={3}
-            name="action-plan-description"
+            name="actionPlanDescription"
             label="Action Plan Desciption"
             InputLabelProps={{
               shrink: true,
@@ -108,7 +207,7 @@ const AddActionPlan = ({ open, setOpen }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="clinical-outcome"
+            name="clinicalOutcome"
             label="Clinical Outcome"
             variant="outlined"
             InputLabelProps={{
@@ -119,7 +218,7 @@ const AddActionPlan = ({ open, setOpen }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="contributing-factors"
+            name="contributingFactors"
             label="Contributing Factors"
             variant="outlined"
             InputLabelProps={{
@@ -130,7 +229,7 @@ const AddActionPlan = ({ open, setOpen }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="suspected-medication"
+            name="suspectedMedication"
             label="Suspected Medication"
             variant="outlined"
             InputLabelProps={{
@@ -143,7 +242,7 @@ const AddActionPlan = ({ open, setOpen }) => {
             id="standard-multiline-static"
             multiline
             rows={3}
-            name="action-to-take-by-medical-company"
+            name="actionToTake"
             label="Action To Take By Medical Company"
             InputLabelProps={{
               shrink: true,
@@ -159,15 +258,22 @@ const AddActionPlan = ({ open, setOpen }) => {
                 name: "medical-company-involved",
                 id: "uncontrolled-native",
               }}
+              onChange={(e) => {
+                e.preventDefault();
+                setMedicalCompanyInvolved(e.target.value);
+              }}
             >
               <option value={"rexall"}>Rexall Pharmacy</option>
             </NativeSelect>
           </FormControl>
-          <Button variant="contained" component="label" sx={{ marginTop: 2 }}>
-            <FilePresent />
-            Upload Files
-            <input hidden multiple type="file" />
-          </Button>
+          <TextField
+            sx={{ marginTop: 4 }}
+            name="file"
+            type="file"
+            label="Upload File"
+            InputLabelProps={{ shrink: true }}
+            onChange={captureFile}
+          ></TextField>
           <ButtonGroup
             fullWidth
             variant="contained"
@@ -177,7 +283,7 @@ const AddActionPlan = ({ open, setOpen }) => {
             <Button fullWidth>Create</Button>
           </ButtonGroup>
         </Box>
-      </SytledModal>
+      </StyledModal>
     </>
   );
 };

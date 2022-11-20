@@ -6,6 +6,8 @@ contract Government {
   mapping(address => bool) isGovernment;
 
   struct ActionPlan {
+    string creator;
+    string reportId;
     string actionPlanCreationDate;
     string actionPlanDescription;
     string clinicalOutcome;
@@ -14,6 +16,7 @@ contract Government {
     string actionToTake;
     string medicalCompanyInvolved;
     string ipfsHash;
+    bool resolved;
   }
 
   struct government {
@@ -51,6 +54,10 @@ contract Government {
     governments[_addr].locationAddress = _locationAddress;
     governments[_addr].addr = _addr;
     governments[_addr].isApproved = true;
+  }
+
+  function getAllGovernmentAddresses() public view returns (address[] memory) {
+    return governmentList;
   }
 
   function getGovernmentById(uint256 _id)
@@ -123,6 +130,7 @@ contract Government {
 
   function addGovernmentActionPlan(
     address _addr,
+    string memory _reportId,
     string memory _actionPlanCreationDate,
     string memory _actionPlanDescription,
     string memory _clinicalOutcome,
@@ -135,6 +143,8 @@ contract Government {
     require(isGovernment[_addr], "Government is not registered");
     governments[_addr].actionPlans.push(
       ActionPlan(
+        governments[_addr].name,
+        _reportId,
         _actionPlanCreationDate,
         _actionPlanDescription,
         _clinicalOutcome,
@@ -142,7 +152,8 @@ contract Government {
         _suspectedMedication,
         _actionToTake,
         _medicalCompanyInvolved,
-        _ipfsHash
+        _ipfsHash,
+        false
       )
     );
   }
@@ -202,6 +213,14 @@ contract MedicalCompany {
       _addr,
       true
     );
+  }
+
+  function getAllMedicalCompanyAddresses()
+    public
+    view
+    returns (address[] memory)
+  {
+    return medicalCompanyList;
   }
 
   function getMedicalCompanyById(uint256 _id)
@@ -277,8 +296,12 @@ contract MedicalCompany {
 
 contract Patient {
   uint256 public patientListIndex = 0;
+  uint256 public reportIndex = 0;
 
   struct Report {
+    uint256 reportId;
+    string reporterFirstName;
+    string reporterLastName;
     string incidentDate;
     string incidentDescription;
     string incidentCategory;
@@ -333,6 +356,10 @@ contract Patient {
     patients[msg.sender].addr = msg.sender;
   }
 
+  function getAllPatientAddresses() public view returns (address[] memory) {
+    return patientList;
+  }
+
   function getPatientProfile(address _addr)
     public
     view
@@ -374,8 +401,12 @@ contract Patient {
     string memory _ipfsHash
   ) public {
     require(isPatient[_addr], "Patient is not registered");
+    reportIndex = reportIndex + 1;
     patients[_addr].reports.push(
       Report(
+        reportIndex,
+        patients[_addr].firstName,
+        patients[_addr].lastName,
         _incidentDate,
         _incidentDescription,
         _incidentCategory,

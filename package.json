@@ -2,6 +2,7 @@
   "name": "blockchain-in-phr",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:5001/",
   "dependencies": {
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
@@ -11,6 +12,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
+    "buffer": "^6.0.3",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.5",
     "ipfs-http-client": "^58.0.0",
