@@ -67,6 +67,16 @@ const EditReport = ({ open, setOpen }) => {
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
+      // const response = await smartContract.methods
+      //   .getPatientProfile(accounts[0])
+      //   .call({ from: accounts[0] });
+      // console.log("profileData: " + JSON.stringify(response, null, 2));
+      // setProfileData(response);
+      // setPhone(response["_phone"] ? response["_phone"] : "");
+      // setSelectedDate(
+      //   response["_dateOfBirth"] ? moment(response["_dateOfBirth"]) : moment()
+      // );
+      // setBloodType(response["_bloodType"] ? response["_bloodType"] : "");
     }
     setup();
   }, []);
@@ -253,8 +263,11 @@ const EditReport = ({ open, setOpen }) => {
               <option value={"rexall"}>Rexall Pharmacy</option>
             </NativeSelect>
           </FormControl>
+          <Typography sx={{ marginTop: 4 }}>
+            Note: If you do not upload a file, the existing file won't change
+          </Typography>
           <TextField
-            sx={{ marginTop: 4 }}
+            sx={{ marginTop: 2 }}
             name="file"
             type="file"
             label="Upload File"

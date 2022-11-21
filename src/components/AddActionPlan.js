@@ -249,7 +249,7 @@ const AddActionPlan = ({ reportId, open, setOpen }) => {
               shrink: true,
             }}
           />
-          <FormControl fullWidth>
+          {/* <FormControl fullWidth>
             <InputLabel variant="standard" htmlFor="uncontrolled-native">
               Medical Company Involved
             </InputLabel>
@@ -266,7 +266,7 @@ const AddActionPlan = ({ reportId, open, setOpen }) => {
             >
               <option value={"rexall"}>Rexall Pharmacy</option>
             </NativeSelect>
-          </FormControl>
+          </FormControl> */}
           <TextField
             sx={{ marginTop: 4 }}
             name="file"

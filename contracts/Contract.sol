@@ -413,22 +413,54 @@ contract Contract {
     return reports;
   }
 
+  function getReportById(address _addr, uint256 _reportId)
+    public
+    view
+    returns (Report memory _report)
+  {
+    return reports[_reportId];
+  }
+
+  function editPatientReport(
+    address _addr,
+    uint256 _reportId,
+    string memory _incidentDate,
+    string memory _incidentDescription,
+    string memory _incidentCategory,
+    string memory _careSetting,
+    string memory _medicationTaken,
+    string memory _medicalCompanyInvolved,
+    string memory _ipfsHash
+  ) public {
+    require(isPatient[msg.sender], "Patient is not registered");
+    reports[_reportId].incidentDate = _incidentDate;
+    reports[_reportId].incidentDescription = _incidentDescription;
+    reports[_reportId].incidentCategory = _incidentCategory;
+    reports[_reportId].careSetting = _careSetting;
+    reports[_reportId].medicationTaken = _medicationTaken;
+    reports[_reportId].medicalCompanyInvolved = _medicalCompanyInvolved;
+    reports[_reportId].ipfsHash = _ipfsHash;
+  }
+
   function getAllNames(address _addr)
     public
     view
     returns (
-      string[] memory _patientNames,
+      string[] memory _patientFirstNames,
+      string[] memory _patientLastNames,
       string[] memory _medicalCompanyNames,
       string[] memory _governmentNames
     )
   {
-    string[] memory patientNames = new string[](patientList.length);
+    string[] memory patientFirstNames = new string[](patientList.length);
+    string[] memory patientLastNames = new string[](patientList.length);
     string[] memory medicalCompanyNames = new string[](
       medicalCompanyList.length
     );
     string[] memory governmentNames = new string[](governmentList.length);
     for (uint256 i = 0; i < patientList.length; i++) {
-      patientNames[i] = patients[patientList[i]].firstName;
+      patientFirstNames[i] = patients[patientList[i]].firstName;
+      patientLastNames[i] = patients[patientList[i]].lastName;
     }
 
     for (uint256 i = 0; i < medicalCompanyList.length; i++) {
@@ -439,6 +471,11 @@ contract Contract {
     for (uint256 i = 0; i < governmentList.length; i++) {
       governmentNames[i] = governments[governmentList[i]].name;
     }
-    return (patientNames, medicalCompanyNames, governmentNames);
+    return (
+      patientFirstNames,
+      patientLastNames,
+      medicalCompanyNames,
+      governmentNames
+    );
   }
 }

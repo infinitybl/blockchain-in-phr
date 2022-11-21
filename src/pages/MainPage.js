@@ -30,11 +30,11 @@ function MainPage({ setMode, mode }) {
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + accounts[0]);
-      const response = await smartContract.methods
+      const getReportsResponse = await smartContract.methods
         .getReports(accounts[0])
         .call({ from: accounts[0] });
 
-      const reports = response.map((report) => ({
+      const reports = getReportsResponse.map((report) => ({
         reportId: report[0],
         reporterFirstName: report[1],
         reporterLastName: report[2],
@@ -58,8 +58,17 @@ function MainPage({ setMode, mode }) {
         },
         isResolved: report[11],
       }));
+
       console.log("reports: " + JSON.stringify(reports, null, 2));
       setReports(reports);
+
+      const getAllNamesResponse = await smartContract.methods
+        .getAllNames(accounts[0])
+        .call({ from: accounts[0] });
+
+      console.log(
+        "getAllNamesResponse: " + JSON.stringify(getAllNamesResponse, null, 2)
+      );
     }
     setup();
   }, []);
