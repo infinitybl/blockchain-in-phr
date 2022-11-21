@@ -6,7 +6,8 @@ import {
   styled,
   InputBase,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import UserTypeContext from "../context/UserTypeContext";
 import ReportCard from "./ReportCard";
 
 import { useLocation } from "react-router-dom";
@@ -19,6 +20,7 @@ const Search = styled("div")(({ theme }) => ({
 }));
 
 const Feed = ({
+  reports,
   addActionPlanModalOpen,
   setAddActionPlanModalOpen,
   editReportModalOpen,
@@ -54,34 +56,24 @@ const Feed = ({
           {/* <Search>
             <InputBase placeholder="Search Reports" />
           </Search> */}
-          <ReportCard
-            reporterName="John Doe"
-            incidentDescription="Incident Description 1"
-            incidentDate="August 28, 2022"
-            incidentCategory="Prescribed Medication"
-            careSetting="Home"
-            medicationTaken="Atorvastatin"
-            medicalCompanyInvolved="Rexall Pharmacy"
-            files=""
-            addActionPlanModalOpen={addActionPlanModalOpen}
-            setAddActionPlanModalOpen={setAddActionPlanModalOpen}
-            editReportModalOpen={editReportModalOpen}
-            setEditReportModalOpen={setEditReportModalOpen}
-          />
-          <ReportCard
-            reporterName="John Doe"
-            incidentDescription="Incident Description 2"
-            incidentDate="January 14, 2022"
-            incidentCategory="Clinical Trial"
-            careSetting="Home"
-            medicationTaken="Lisinopril"
-            medicalCompanyInvolved="Rexall Pharmacy"
-            files=""
-            addActionPlanModalOpen={addActionPlanModalOpen}
-            setAddActionPlanModalOpen={setAddActionPlanModalOpen}
-            editReportModalOpen={editReportModalOpen}
-            setEditReportModalOpen={setEditReportModalOpen}
-          />
+          {reports.map((report, i) => (
+            <ReportCard
+              key={i}
+              reporterFirstName={report.reporterFirstName}
+              reporterLastName={report.reporterLastName}
+              incidentDescription={report.incidentDescription}
+              incidentDate={report.incidentDate}
+              incidentCategory={report.incidentCategory}
+              careSetting={report.careSetting}
+              medicationTaken={report.medicationTaken}
+              medicalCompanyInvolved={report.medicalCompanyInvolved}
+              file={report.ipfsHash}
+              addActionPlanModalOpen={addActionPlanModalOpen}
+              setAddActionPlanModalOpen={setAddActionPlanModalOpen}
+              editReportModalOpen={editReportModalOpen}
+              setEditReportModalOpen={setEditReportModalOpen}
+            />
+          ))}
         </Box>
       )}
     </Box>

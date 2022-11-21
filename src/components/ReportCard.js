@@ -17,14 +17,15 @@ import {
 } from "@mui/material";
 
 const ReportCard = ({
-  reporterName,
+  reporterFirstName,
+  reporterLastName,
   incidentDescription,
   incidentDate,
   incidentCategory,
   careSetting,
   medicationTaken,
   medicalCompanyInvolved,
-  files,
+  file,
   addActionPlanModalOpen,
   setAddActionPlanModalOpen,
   editReportModalOpen,
@@ -41,7 +42,7 @@ const ReportCard = ({
       <CardHeader
         avatar={
           <Avatar sx={{ bgcolor: "red" }} aria-label="report">
-            J
+            {reporterFirstName.charAt(0) + reporterLastName.charAt(0)}
           </Avatar>
         }
         // action={
@@ -49,28 +50,48 @@ const ReportCard = ({
         //     <MoreVert />
         //   </IconButton>
         // }
-        title={reporterName}
+        title={reporterFirstName + " " + reporterLastName}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
+          <br />
           <strong>Incident Date:</strong> {incidentDate}
+          <br />
         </Typography>
         <Typography variant="body2" color="text.secondary">
+          <br />
           <strong>Incident Category:</strong> {incidentCategory}
+          <br />
         </Typography>
         <Typography variant="body2" color="text.secondary">
+          <br />
           <strong>Care Setting:</strong> {careSetting}
+          <br />
         </Typography>
         <Typography variant="body2" color="text.secondary">
+          <br />
           <strong>Medication Taken:</strong> {medicationTaken}
+          <br />
         </Typography>
         <Typography variant="body2" color="text.secondary">
+          <br />
           <strong>Medical Company Involved:</strong> {medicalCompanyInvolved}
+          <br />
         </Typography>
-      </CardContent>
-      <CardContent>
         <Typography variant="body2" color="text.secondary">
-          <strong>Incident Description:</strong> {incidentDescription}
+          <br />
+          <strong>Incident Description:</strong>
+          <br />
+          {incidentDescription}
+          <br />
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          <br />
+          <strong>URL to Related File: </strong>
+          <br />
+          <a href={file} target="_blank">
+            {file}
+          </a>
         </Typography>
       </CardContent>
       <CardActions

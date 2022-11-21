@@ -47,7 +47,7 @@ const theme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate();
-  const [contracts, setContracts] = useState(null);
+  const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
   const handleSubmit = (event) => {
@@ -62,8 +62,8 @@ export default function Login() {
   useEffect(() => {
     async function setup() {
       try {
-        const [contracts, accounts] = await Web3Setup();
-        setContracts(contracts);
+        const [smartContract, accounts] = await Web3Setup();
+        setSmartContract(smartContract);
         setAccount(accounts[0]);
         console.log("Account: " + accounts[0]);
         if (accounts[0]) {
