@@ -45,7 +45,7 @@ const UserBox = styled(Box)(({ theme }) => ({
   },
 }));
 
-const NavbarMain = () => {
+const NavbarMain = ({ setSearchText }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -64,7 +64,13 @@ const NavbarMain = () => {
           />
         </IconButton>
         <Search>
-          <InputBase sx={{ color: "black" }} placeholder="Search Reports" />
+          <InputBase
+            sx={{ color: "black" }}
+            placeholder="Search By Description"
+            onChange={(event) => {
+              setSearchText(event.target.value);
+            }}
+          />
         </Search>
         <Icons>
           {/* <Badge badgeContent={4} color="error">

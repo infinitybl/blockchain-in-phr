@@ -18,7 +18,12 @@ import {
 } from "@mui/material";
 import React from "react";
 
-const Sidebar = ({ mode, setMode }) => {
+const Sidebar = ({
+  mode,
+  setMode,
+  reportsFilterType,
+  setReportsFilterType,
+}) => {
   return (
     <Box flex={1} p={2}>
       <Box
@@ -39,7 +44,12 @@ const Sidebar = ({ mode, setMode }) => {
         </Typography>
         <List>
           <ListItem disablePadding>
-            <ListItemButton component="a" href="#all">
+            <ListItemButton
+              selected={reportsFilterType === "all"}
+              onClick={(event) => {
+                setReportsFilterType("all");
+              }}
+            >
               <ListItemIcon>
                 <Article />
               </ListItemIcon>
@@ -47,31 +57,46 @@ const Sidebar = ({ mode, setMode }) => {
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton component="a" href="#unreviewed">
+            <ListItemButton
+              selected={reportsFilterType === "no-action-plan"}
+              onClick={(event) => {
+                setReportsFilterType("no-action-plan");
+              }}
+            >
               <ListItemIcon>
                 <Cancel />
               </ListItemIcon>
-              <ListItemText primary="Unreviewed" />
+              <ListItemText primary="No Action Plan" />
             </ListItemButton>
           </ListItem>
           <ListItem disablePadding>
-            <ListItemButton component="a" href="#action-plan">
+            <ListItemButton
+              selected={reportsFilterType === "has-action-plan"}
+              onClick={(event) => {
+                setReportsFilterType("has-action-plan");
+              }}
+            >
               <ListItemIcon>
                 <Summarize />
               </ListItemIcon>
-              <ListItemText primary="Action Plan" />
+              <ListItemText primary="Has Action Plan" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
+          {/* <ListItem disablePadding>
             <ListItemButton component="a" href="#medication-updates">
               <ListItemIcon>
                 <MedicalServices />
               </ListItemIcon>
               <ListItemText primary="Medication Updates" />
             </ListItemButton>
-          </ListItem>
+          </ListItem> */}
           <ListItem disablePadding>
-            <ListItemButton component="a" href="#resolved">
+            <ListItemButton
+              selected={reportsFilterType === "resolved"}
+              onClick={(event) => {
+                setReportsFilterType("resolved");
+              }}
+            >
               <ListItemIcon>
                 <CheckCircle />
               </ListItemIcon>
