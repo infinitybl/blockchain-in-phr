@@ -1,13 +1,11 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
-contract Government {
-  uint256 public governmentListIndex;
-  mapping(address => bool) isGovernment;
+contract Contract {
+  uint256 public reportIndex = 0;
 
   struct ActionPlan {
     string creator;
-    string reportId;
     string actionPlanCreationDate;
     string actionPlanDescription;
     string clinicalOutcome;
@@ -16,8 +14,27 @@ contract Government {
     string actionToTake;
     string medicalCompanyInvolved;
     string ipfsHash;
-    bool resolved;
   }
+
+  struct Report {
+    uint256 reportId;
+    string reporterFirstName;
+    string reporterLastName;
+    string incidentDate;
+    string incidentDescription;
+    string incidentCategory;
+    string careSetting;
+    string medicationTaken;
+    string medicalCompanyInvolved;
+    string ipfsHash;
+    ActionPlan actionPlan;
+    bool isResolved;
+  }
+
+  Report[] reports;
+
+  uint256 public governmentListIndex = 0;
+  mapping(address => bool) isGovernment;
 
   struct government {
     uint256 id;
@@ -44,7 +61,6 @@ contract Government {
   ) public {
     require(!isGovernment[_addr], "Government is already registered");
     governmentList.push(_addr);
-    governmentListIndex = governmentListIndex + 1;
     isGovernment[_addr] = true;
     governments[_addr].id = governmentListIndex;
     governments[_addr].name = _name;
@@ -54,6 +70,7 @@ contract Government {
     governments[_addr].locationAddress = _locationAddress;
     governments[_addr].addr = _addr;
     governments[_addr].isApproved = true;
+    governmentListIndex = governmentListIndex + 1;
   }
 
   function getAllGovernmentAddresses() public view returns (address[] memory) {
@@ -111,10 +128,7 @@ contract Government {
       bool isApproved
     )
   {
-    require(
-      governments[_address].isApproved,
-      "Government is not approved or government does not exist"
-    );
+    require(isGovernment[_address], "Government is not registered");
     government memory matchedEntry = governments[_address];
     return (
       matchedEntry.id,
@@ -130,7 +144,7 @@ contract Government {
 
   function addGovernmentActionPlan(
     address _addr,
-    string memory _reportId,
+    uint256 _reportId,
     string memory _actionPlanCreationDate,
     string memory _actionPlanDescription,
     string memory _clinicalOutcome,
@@ -141,41 +155,28 @@ contract Government {
     string memory _ipfsHash
   ) public {
     require(isGovernment[_addr], "Government is not registered");
-    governments[_addr].actionPlans.push(
-      ActionPlan(
-        governments[_addr].name,
-        _reportId,
-        _actionPlanCreationDate,
-        _actionPlanDescription,
-        _clinicalOutcome,
-        _contributingFactors,
-        _suspectedMedication,
-        _actionToTake,
-        _medicalCompanyInvolved,
-        _ipfsHash,
-        false
-      )
-    );
+    reports[_reportId].actionPlan.creator = governments[_addr].name;
+    reports[_reportId]
+      .actionPlan
+      .actionPlanCreationDate = _actionPlanCreationDate;
+    reports[_reportId]
+      .actionPlan
+      .actionPlanDescription = _actionPlanDescription;
+    reports[_reportId].actionPlan.clinicalOutcome = _clinicalOutcome;
+    reports[_reportId].actionPlan.contributingFactors = _contributingFactors;
+    reports[_reportId].actionPlan.suspectedMedication = _suspectedMedication;
+    reports[_reportId].actionPlan.actionToTake = _actionToTake;
+    reports[_reportId]
+      .actionPlan
+      .medicalCompanyInvolved = _medicalCompanyInvolved;
+    reports[_reportId].actionPlan.ipfsHash = _ipfsHash;
   }
 
-  function getGovernmentActionPlans(address _addr)
-    public
-    view
-    returns (ActionPlan[] memory _actionPlans)
-  {
-    require(isGovernment[_addr], "Government is not registered");
-    require(
-      governments[_addr].actionPlans.length > 0,
-      "Government does not have any action plans"
-    );
-    return (governments[_addr].actionPlans);
-  }
-}
-
-contract MedicalCompany {
   uint256 public medicalCompanyListIndex;
 
   mapping(address => bool) isMedicalCompany;
+
+  mapping(string => bool) resolvedActionPlans;
 
   struct medicalCompany {
     uint256 id;
@@ -199,9 +200,8 @@ contract MedicalCompany {
     string memory _locationAddress,
     address _addr
   ) public {
-    require(!isMedicalCompany[_addr], "MedicalCompany is already registered");
+    require(!isMedicalCompany[_addr], "Medical company is already registered");
     medicalCompanyList.push(_addr);
-    medicalCompanyListIndex = medicalCompanyListIndex + 1;
     isMedicalCompany[_addr] = true;
     medicalCompanies[_addr] = medicalCompany(
       medicalCompanyListIndex,
@@ -213,6 +213,7 @@ contract MedicalCompany {
       _addr,
       true
     );
+    medicalCompanyListIndex = medicalCompanyListIndex + 1;
   }
 
   function getAllMedicalCompanyAddresses()
@@ -276,10 +277,7 @@ contract MedicalCompany {
       bool isApproved
     )
   {
-    require(
-      medicalCompanies[_address].isApproved,
-      "MedicalCompany is not approved or medicalCompany does not exist"
-    );
+    require(isMedicalCompany[_address], "Medical company is not registered");
     medicalCompany memory matchedEntry = medicalCompanies[_address];
     return (
       matchedEntry.id,
@@ -292,24 +290,13 @@ contract MedicalCompany {
       matchedEntry.isApproved
     );
   }
-}
 
-contract Patient {
-  uint256 public patientListIndex = 0;
-  uint256 public reportIndex = 0;
-
-  struct Report {
-    uint256 reportId;
-    string reporterFirstName;
-    string reporterLastName;
-    string incidentDate;
-    string incidentDescription;
-    string incidentCategory;
-    string careSetting;
-    string medicationTaken;
-    string medicalCompanyInvolved;
-    string ipfsHash;
+  function resolveActionPlan(address _address, uint256 _reportId) public {
+    require(isMedicalCompany[_address], "Medical company is not registered");
+    reports[_reportId].isResolved = true;
   }
+
+  uint256 public patientListIndex = 0;
 
   struct patient {
     uint256 id;
@@ -321,12 +308,10 @@ contract Patient {
     string dateOfBirth;
     string bloodType;
     string homeAddress;
-    Report[] reports;
     address addr;
   }
 
   address[] private patientList;
-  // mapping(address => mapping(address => bool)) isAuth;
   mapping(address => patient) patients;
   mapping(address => bool) isPatient;
 
@@ -342,7 +327,6 @@ contract Patient {
   ) public {
     require(!isPatient[msg.sender], "Patient is already registered");
     patientList.push(msg.sender);
-    patientListIndex = patientListIndex + 1;
     isPatient[msg.sender] = true;
     patients[msg.sender].id = patientListIndex;
     patients[msg.sender].firstName = _firstName;
@@ -354,6 +338,7 @@ contract Patient {
     patients[msg.sender].bloodType = _bloodType;
     patients[msg.sender].homeAddress = _homeAddress;
     patients[msg.sender].addr = msg.sender;
+    patientListIndex = patientListIndex + 1;
   }
 
   function getAllPatientAddresses() public view returns (address[] memory) {
@@ -401,8 +386,7 @@ contract Patient {
     string memory _ipfsHash
   ) public {
     require(isPatient[_addr], "Patient is not registered");
-    reportIndex = reportIndex + 1;
-    patients[_addr].reports.push(
+    reports.push(
       Report(
         reportIndex,
         patients[_addr].firstName,
@@ -413,21 +397,48 @@ contract Patient {
         _careSetting,
         _medicationTaken,
         _medicalCompanyInvolved,
-        _ipfsHash
+        _ipfsHash,
+        ActionPlan("", "", "", "", "", "", "", "", ""),
+        false
       )
     );
+    reportIndex = reportIndex + 1;
   }
 
-  function getPatientReports(address _addr)
+  function getReports(address _addr)
     public
     view
     returns (Report[] memory _reports)
   {
-    require(isPatient[_addr], "Patient is not registered");
-    require(
-      patients[_addr].reports.length > 0,
-      "Patient does not have any reports"
+    return reports;
+  }
+
+  function getAllNames(address _addr)
+    public
+    view
+    returns (
+      string[] memory _patientNames,
+      string[] memory _medicalCompanyNames,
+      string[] memory _governmentNames
+    )
+  {
+    string[] memory patientNames = new string[](patientList.length);
+    string[] memory medicalCompanyNames = new string[](
+      medicalCompanyList.length
     );
-    return (patients[_addr].reports);
+    string[] memory governmentNames = new string[](governmentList.length);
+    for (uint256 i = 0; i < patientList.length; i++) {
+      patientNames[i] = patients[patientList[i]].firstName;
+    }
+
+    for (uint256 i = 0; i < medicalCompanyList.length; i++) {
+      medicalCompanyNames[i] = medicalCompanies[medicalCompanyList[i]]
+        .companyName;
+    }
+
+    for (uint256 i = 0; i < governmentList.length; i++) {
+      governmentNames[i] = governments[governmentList[i]].name;
+    }
+    return (patientNames, medicalCompanyNames, governmentNames);
   }
 }

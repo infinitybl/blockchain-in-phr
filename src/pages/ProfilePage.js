@@ -24,7 +24,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { LocalPharmacy, LockOutlinedIcon } from "@mui/icons-material";
 
-import Navbar from "../components/Navbar";
+import NavbarProfile from "../components/NavbarProfile";
 
 import moment from "moment";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -36,13 +36,13 @@ import Web3Setup from "../web3";
 const theme = createTheme();
 
 export default function ProfilePage() {
-  const [contracts, setContracts] = useState(null);
+  const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
   const [userType, setUserType] = useContext(UserTypeContext);
   const [phone, setPhone] = useState("");
 
-  const [selectedDate, setSelectedDate] = useState(moment());
+  const [selectedDate, setSelectedDate] = useState(new Date().toString());
 
   const handleDateChange = (newDate) => {};
 
@@ -52,30 +52,30 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function setup() {
-      const [contracts, accounts] = await Web3Setup();
-      setContracts(contracts);
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + accounts[0]);
       if (userType === "patient") {
-        const response = await contracts.patientContract.methods
+        const response = await smartContract.methods
           .getPatientProfile(accounts[0])
           .call({ from: accounts[0] });
         console.log("profileData: " + JSON.stringify(response, null, 2));
         setProfileData(response);
         setPhone(response["_phone"] ? response["_phone"] : "");
         setSelectedDate(
-          response["_dateOfBirth"] ? response["_dateOfBirth"] : ""
+          response["_dateOfBirth"] ? moment(response["_dateOfBirth"]) : moment()
         );
         setBloodType(response["_bloodType"] ? response["_bloodType"] : "");
       } else if (userType === "medicalCompany") {
-        const response = await contracts.medicalCompanyContract.methods
+        const response = await smartContract.methods
           .getMedicalCompanyProfile(accounts[0])
           .call({ from: accounts[0] });
         console.log("profileData: " + JSON.stringify(response, null, 2));
         setProfileData(response);
         setPhone(response["_phone"] ? response["_phone"] : "");
       } else if (userType === "government") {
-        const response = await contracts.governmentContract.methods
+        const response = await smartContract.methods
           .getGovernmentProfile(accounts[0])
           .call({ from: accounts[0] });
         console.log("profileData: " + JSON.stringify(response, null, 2));
@@ -88,7 +88,7 @@ export default function ProfilePage() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Navbar />
+      <NavbarProfile />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -253,6 +253,7 @@ export default function ProfilePage() {
                       </InputLabel>
                       <NativeSelect
                         defaultValue={bloodType}
+                        value={bloodType}
                         inputProps={{
                           name: "blood-type",
                           id: "uncontrolled-native",

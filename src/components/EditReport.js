@@ -46,15 +46,16 @@ const UserBox = styled(Box)({
 });
 
 const EditReport = ({ open, setOpen }) => {
-  const [contracts, setContracts] = useState(null);
+  const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
   const [fileBuffer, setFileBuffer] = useState(null);
 
-  const [selectedDate, setSelectedDate] = useState(moment());
+  const [selectedDate, setSelectedDate] = useState(new Date().toString());
 
   const handleDateChange = (newDate) => {
-    setSelectedDate(newDate);
+    console.log("newDate: " + newDate.toString());
+    setSelectedDate(newDate.toString());
   };
 
   const [medicalCompanyInvolved, setMedicalCompanyInvolved] =
@@ -62,8 +63,8 @@ const EditReport = ({ open, setOpen }) => {
 
   useEffect(() => {
     async function setup() {
-      const [contracts, accounts] = await Web3Setup();
-      setContracts(contracts);
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
     }
@@ -120,7 +121,7 @@ const EditReport = ({ open, setOpen }) => {
         console.log("Decrypted ipfsHash: " + decrypt(ipfsHash));
       }
 
-      const response = await contracts.patientContract.methods
+      const response = await smartContract.methods
         .addPatientReport(
           account,
           requestData.incidentDate,

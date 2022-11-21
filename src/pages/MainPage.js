@@ -34,7 +34,7 @@ function MainPage({ setMode, mode }) {
           marginTop: { xs: "50px", lg: 0 },
         }}
       >
-        <AddReport />
+        <AddReport setMode={setMode} mode={mode} />
         <AddActionPlan
           open={addActionPlanModalOpen}
           setOpen={setAddActionPlanModalOpen}

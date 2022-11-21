@@ -53,7 +53,7 @@ const theme = createTheme();
 
 export default function Signup() {
   const navigate = useNavigate();
-  const [contracts, setContracts] = useState(null);
+  const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
   const [userType, setUserType] = useContext(UserTypeContext);
@@ -63,7 +63,7 @@ export default function Signup() {
     setPhone(newPhone);
   };
 
-  const [selectedDate, setSelectedDate] = useState(moment());
+  const [selectedDate, setSelectedDate] = useState(new Date().toString());
 
   const handleDateChange = (newDate) => {
     console.log("newDate: " + newDate.toString());
@@ -98,7 +98,7 @@ export default function Signup() {
         homeAddress: data.get("homeAddress"),
       };
       try {
-        const response = await contracts.patientContract.methods
+        const response = await smartContract.methods
           .addPatient(
             requestData.firstName,
             requestData.lastName,
@@ -131,7 +131,7 @@ export default function Signup() {
         locationAddress: data.get("locationAddress"),
       };
       try {
-        const response = await contracts.medicalCompanyContract.methods
+        const response = await smartContract.methods
           .addMedicalCompany(
             requestData.companyName,
             requestData.companyType,
@@ -162,7 +162,7 @@ export default function Signup() {
         locationAddress: data.get("locationAddress"),
       };
       try {
-        const response = await contracts.governmentContract.methods
+        const response = await smartContract.methods
           .addGovernment(
             requestData.name,
             requestData.country,
@@ -182,8 +182,8 @@ export default function Signup() {
 
   useEffect(() => {
     async function setup() {
-      const [contracts, accounts] = await Web3Setup();
-      setContracts(contracts);
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
     }

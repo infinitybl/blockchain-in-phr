@@ -1,7 +1,5 @@
 import Web3 from "web3";
-import Government from "./abis/Government.json";
-import MedicalCompany from "./abis/MedicalCompany.json";
-import Patient from "./abis/Patient.json";
+import Contract from "./abis/Contract.json";
 
 async function Web3Setup() {
   await window.ethereum.enable();
@@ -10,38 +8,18 @@ async function Web3Setup() {
   const networkId = await web3.eth.net.getId();
   console.log(JSON.stringify(accounts, null, 2));
   console.log("networkId: " + (await web3.eth.net.getId()));
-  const governmentNetworkData = Government.networks[networkId];
-  const medicalCompanyNetworkData = MedicalCompany.networks[networkId];
-  const patientNetworkData = Patient.networks[networkId];
-  if (
-    !governmentNetworkData ||
-    !medicalCompanyNetworkData ||
-    !patientNetworkData
-  ) {
+  const networkData = Contract.networks[networkId];
+  if (!networkData) {
     alert(
       "Wrong Network ID! Please make sure you are connected to the correct Blockchain network"
     );
   }
-  const governmentContract = await new web3.eth.Contract(
-    Government.abi,
-    governmentNetworkData.address
-  );
-  const medicalCompanyContract = await new web3.eth.Contract(
-    MedicalCompany.abi,
-    medicalCompanyNetworkData.address
-  );
-  const patientContract = await new web3.eth.Contract(
-    Patient.abi,
-    patientNetworkData.address
+  const smartContract = await new web3.eth.Contract(
+    Contract.abi,
+    networkData.address
   );
 
-  const contracts = {
-    governmentContract,
-    medicalCompanyContract,
-    patientContract,
-  };
-
-  return [contracts, accounts];
+  return [smartContract, accounts];
 }
 
 export default Web3Setup;

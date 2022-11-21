@@ -1,9 +1,5 @@
-var Government = artifacts.require("Government");
-var MedicalCompany = artifacts.require("MedicalCompany");
-var Patient = artifacts.require("Patient");
+var Contract = artifacts.require("Contract");
 
 module.exports = function (deployer) {
-  deployer.deploy(Government);
-  deployer.deploy(MedicalCompany);
-  deployer.deploy(Patient);
+  deployer.deploy(Contract);
 };
