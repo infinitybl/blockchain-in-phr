@@ -35,14 +35,21 @@ function MainPage({ setMode, mode }) {
   const [reportsFilterType, setReportsFilterType] = useState("all");
 
   useEffect(() => {
-    if (!userType) {
-      navigate("/");
-    }
     async function setup() {
       const [smartContract, accounts] = await Web3Setup();
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + accounts[0]);
+      let userTypeResponse = await smartContract.methods
+        .getUserType(accounts[0])
+        .call({ from: accounts[0] });
+      console.log("userType: " + userTypeResponse);
+      if (userTypeResponse) {
+        setUserType(userTypeResponse);
+      } else {
+        navigate("/");
+      }
+
       const getAllNamesResponse = await smartContract.methods
         .getAllNames(accounts[0])
         .call({ from: accounts[0] });
@@ -65,7 +72,7 @@ function MainPage({ setMode, mode }) {
         .call({ from: accounts[0] });
 
       const reports = getReportsResponse.map((report) => ({
-        reportId: decrypt(report[0]),
+        reportId: report[0],
         reporterFirstName: decrypt(report[1]),
         reporterLastName: decrypt(report[2]),
         incidentDate: decrypt(report[3]),
@@ -197,19 +204,26 @@ function MainPage({ setMode, mode }) {
           marginTop: { xs: "50px", lg: 0 },
         }}
       >
-        <AddReport
-          medicalCompanyNames={medicalCompanyNames}
-          setMode={setMode}
-          mode={mode}
-        />
-        <AddActionPlan
-          open={addActionPlanModalOpen}
-          setOpen={setAddActionPlanModalOpen}
-        />
-        <EditReport
-          open={editReportModalOpen}
-          setOpen={setEditReportModalOpen}
-        />
+        {userType === "patient" && (
+          <AddReport
+            medicalCompanyNames={medicalCompanyNames}
+            setMode={setMode}
+            mode={mode}
+          />
+        )}
+        {userType === "government" && (
+          <AddActionPlan
+            open={addActionPlanModalOpen}
+            setOpen={setAddActionPlanModalOpen}
+          />
+        )}
+        {userType === "patient" && (
+          <EditReport
+            medicalCompanyNames={medicalCompanyNames}
+            open={editReportModalOpen}
+            setOpen={setEditReportModalOpen}
+          />
+        )}
       </Box>
     </Box>
   );

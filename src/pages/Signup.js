@@ -100,24 +100,20 @@ export default function Signup() {
         bloodType: encrypt(bloodType),
         homeAddress: encrypt(data.get("homeAddress")),
       };
-      try {
-        const response = await smartContract.methods
-          .addPatient(
-            requestData.firstName,
-            requestData.lastName,
-            requestData.phone,
-            requestData.email,
-            requestData.gender,
-            requestData.dateOfBirth,
-            requestData.bloodType,
-            requestData.homeAddress
-          )
-          .send({ from: account });
-        console.log(response);
-        navigate("/main");
-      } catch (e) {
-        alert("Error");
-      }
+      const response = await smartContract.methods
+        .addPatient(
+          requestData.firstName,
+          requestData.lastName,
+          requestData.phone,
+          requestData.email,
+          requestData.gender,
+          requestData.dateOfBirth,
+          requestData.bloodType,
+          requestData.homeAddress
+        )
+        .send({ from: account });
+      console.log(response);
+      navigate("/main");
     } else if (localUserType === "medicalCompany") {
       console.log({
         companyName: data.get("companyName"),
@@ -133,22 +129,18 @@ export default function Signup() {
         email: encrypt(data.get("email")),
         locationAddress: encrypt(data.get("locationAddress")),
       };
-      try {
-        const response = await smartContract.methods
-          .addMedicalCompany(
-            requestData.companyName,
-            requestData.companyType,
-            requestData.phone,
-            requestData.email,
-            requestData.locationAddress,
-            account
-          )
-          .send({ from: account });
-        console.log(response);
-        navigate("/main");
-      } catch (e) {
-        alert("Error");
-      }
+      const response = await smartContract.methods
+        .addMedicalCompany(
+          requestData.companyName,
+          requestData.companyType,
+          requestData.phone,
+          requestData.email,
+          requestData.locationAddress,
+          account
+        )
+        .send({ from: account });
+      console.log(response);
+      navigate("/main");
     } else if (localUserType === "government") {
       console.log({
         name: data.get("healthMinistryName"),
@@ -164,29 +156,37 @@ export default function Signup() {
         email: encrypt(data.get("email")),
         locationAddress: encrypt(data.get("locationAddress")),
       };
-      try {
-        const response = await smartContract.methods
-          .addGovernment(
-            requestData.name,
-            requestData.country,
-            requestData.phone,
-            requestData.email,
-            requestData.locationAddress,
-            account
-          )
-          .send({ from: account });
-        console.log(response);
-        navigate("/main");
-      } catch (e) {
-        alert("Error");
-      }
+      const response = await smartContract.methods
+        .addGovernment(
+          requestData.name,
+          requestData.country,
+          requestData.phone,
+          requestData.email,
+          requestData.locationAddress,
+          account
+        )
+        .send({ from: account });
+      console.log(response);
+      navigate("/main");
     }
   };
 
   useEffect(() => {
-    if (userType) {
-      navigate("/main");
+    async function setup() {
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
+      setAccount(accounts[0]);
+      console.log("Account: " + accounts[0]);
+      let userTypeResponse = await smartContract.methods
+        .getUserType(accounts[0])
+        .call({ from: accounts[0] });
+      console.log("userType: " + userTypeResponse);
+      if (userTypeResponse) {
+        setUserType(userTypeResponse);
+        navigate("/main");
+      }
     }
+    setup();
   }, []);
 
   return (
@@ -465,13 +465,13 @@ export default function Signup() {
             >
               Sign Up
             </Button>
-            <Grid container justifyContent="flex-end">
+            {/* <Grid container justifyContent="flex-end">
               <Grid item>
                 <Link href="/login" variant="body2">
                   Already have an account? Log in
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
         <Copyright sx={{ mt: 5, mb: 4 }} />

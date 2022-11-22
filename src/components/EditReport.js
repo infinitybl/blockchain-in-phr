@@ -13,7 +13,10 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import UserTypeContext from "../context/UserTypeContext";
+import ReportIdContext from "../context/ReportIdContext";
+import { useNavigate } from "react-router-dom";
 import {
   Add as AddIcon,
   Close,
@@ -31,6 +34,7 @@ import ipfsClient from "../ipfs";
 import { Buffer } from "buffer";
 
 import { encrypt, decrypt } from "../crypto";
+import { report } from "process";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -45,9 +49,17 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const EditReport = ({ open, setOpen }) => {
+const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
+  const navigate = useNavigate();
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
+
+  const [userType, setUserType] = useContext(UserTypeContext);
+  const [reportId, setReportId] = useContext(ReportIdContext);
+
+  const [report, setReport] = useState([]);
+  const [reporterFirstName, setReporterFirstName] = useState("");
+  const [reporterLastName, setReporterLastName] = useState("");
 
   const [fileBuffer, setFileBuffer] = useState(null);
 
@@ -58,8 +70,7 @@ const EditReport = ({ open, setOpen }) => {
     setSelectedDate(newDate.toString());
   };
 
-  const [medicalCompanyInvolved, setMedicalCompanyInvolved] =
-    useState("rexall");
+  const [medicalCompanyInvolved, setMedicalCompanyInvolved] = useState("");
 
   useEffect(() => {
     async function setup() {
@@ -67,19 +78,32 @@ const EditReport = ({ open, setOpen }) => {
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
-      // const response = await smartContract.methods
-      //   .getPatientProfile(accounts[0])
-      //   .call({ from: accounts[0] });
-      // console.log("profileData: " + JSON.stringify(response, null, 2));
-      // setProfileData(response);
-      // setPhone(response["_phone"] ? response["_phone"] : "");
-      // setSelectedDate(
-      //   response["_dateOfBirth"] ? moment(response["_dateOfBirth"]) : moment()
-      // );
-      // setBloodType(response["_bloodType"] ? response["_bloodType"] : "");
     }
     setup();
   }, []);
+
+  useEffect(() => {
+    async function getReport() {
+      if (reportId) {
+        let response = await smartContract.methods
+          .getReportById(account, reportId)
+          .call({ from: account });
+        setReport(response);
+        setReporterFirstName(response[1] ? decrypt(response[1]) : "");
+        setReporterLastName(response[2] ? decrypt(response[2]) : "");
+        setSelectedDate(response[3] ? decrypt(response[3]) : "");
+        setMedicalCompanyInvolved(response[8] ? decrypt(response[8]) : "");
+        console.log(JSON.stringify(response, null, 2));
+      }
+    }
+    getReport();
+  }, [reportId]);
+
+  useEffect(() => {
+    setMedicalCompanyInvolved(
+      medicalCompanyNames[0] ? medicalCompanyNames[0] : ""
+    );
+  }, [medicalCompanyNames]);
 
   const captureFile = (e) => {
     e.stopPropagation();
@@ -102,6 +126,7 @@ const EditReport = ({ open, setOpen }) => {
     try {
       let requestData = {};
       console.log({
+        reportId: reportId,
         incidentDate: selectedDate,
         incidentDescription: data.get("incidentDescription"),
         incidentCategory: data.get("incidentCategory"),
@@ -110,6 +135,7 @@ const EditReport = ({ open, setOpen }) => {
         medicalCompanyInvolved: medicalCompanyInvolved,
       });
       requestData = {
+        reportId: reportId,
         incidentDate: encrypt(selectedDate),
         incidentDescription: encrypt(data.get("incidentDescription")),
         incidentCategory: encrypt(data.get("incidentCategory")),
@@ -129,11 +155,14 @@ const EditReport = ({ open, setOpen }) => {
         ipfsHash = encrypt(url);
 
         console.log("Decrypted ipfsHash: " + decrypt(ipfsHash));
+      } else {
+        ipfsHash = report[9] ? decrypt(report[9]) : "";
       }
 
       const response = await smartContract.methods
-        .addPatientReport(
+        .editPatientReport(
           account,
+          parseInt(requestData.reportId),
           requestData.incidentDate,
           requestData.incidentDescription,
           requestData.incidentCategory,
@@ -146,14 +175,38 @@ const EditReport = ({ open, setOpen }) => {
       console.log(response);
     } catch (err) {
       console.log(err);
-      alert("An error occured when editing the incident report");
+      alert("An error occured when editing an incident report");
     }
 
     setOpen(false);
+    window.location.reload(false);
   };
 
   return (
     <>
+      {!open && (
+        <>
+          <Tooltip
+            onClick={(e) => setOpen(true)}
+            title="Add"
+            sx={{
+              position: "fixed",
+              bottom: 20,
+              left: 20,
+            }}
+          >
+            <Fab color="primary" aria-label="add" variant="extended">
+              <AddIcon />
+              <Typography
+                variant="span"
+                sx={{ display: { xs: "none", sm: "block" } }}
+              >
+                Edit Incident Report
+              </Typography>
+            </Fab>
+          </Tooltip>
+        </>
+      )}
       <StyledModal
         open={open}
         onClose={(e) => setOpen(false)}
@@ -189,9 +242,11 @@ const EditReport = ({ open, setOpen }) => {
             <Typography fontWeight={600} variant="span">
               Reporter:
             </Typography>
-            <Avatar sx={{ width: 30, height: 30 }} />
+            <Avatar sx={{ width: 30, height: 30, bgcolor: "red" }}>
+              {reporterFirstName.charAt(0) + reporterLastName.charAt(0)}
+            </Avatar>
             <Typography fontWeight={500} variant="span">
-              John Doe
+              {reporterFirstName} {reporterLastName}
             </Typography>
           </UserBox>
           <TextField
@@ -200,8 +255,9 @@ const EditReport = ({ open, setOpen }) => {
             id="standard-multiline-static"
             multiline
             rows={3}
-            name="incident-description"
+            name="incidentDescription"
             label="Incident Desciption"
+            defaultValue={report[4] ? decrypt(report[4]) : ""}
             InputLabelProps={{
               shrink: true,
             }}
@@ -216,8 +272,9 @@ const EditReport = ({ open, setOpen }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="incident-category"
+            name="incidentCategory"
             label="Incident Category"
+            defaultValue={report[5] ? decrypt(report[5]) : ""}
             variant="outlined"
             InputLabelProps={{
               shrink: true,
@@ -227,8 +284,9 @@ const EditReport = ({ open, setOpen }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="care-setting"
+            name="careSetting"
             label="Care Setting"
+            defaultValue={report[6] ? decrypt(report[6]) : ""}
             variant="outlined"
             InputLabelProps={{
               shrink: true,
@@ -238,8 +296,9 @@ const EditReport = ({ open, setOpen }) => {
             margin="normal"
             sx={{ width: "100%", marginBottom: 2 }}
             id="outlined-basic"
-            name="medication-taken"
+            name="medicationTaken"
             label="Medication Taken"
+            defaultValue={report[7] ? decrypt(report[7]) : ""}
             variant="outlined"
             InputLabelProps={{
               shrink: true,
@@ -250,17 +309,19 @@ const EditReport = ({ open, setOpen }) => {
               Medical Company Involved
             </InputLabel>
             <NativeSelect
-              defaultValue={"rexall"}
+              defaultValue={medicalCompanyInvolved}
+              value={medicalCompanyInvolved}
               inputProps={{
-                name: "medical-company-involved",
+                name: "medicalCompanyInvolved",
                 id: "uncontrolled-native",
               }}
-              onChange={(e) => {
-                e.preventDefault();
-                setMedicalCompanyInvolved(e.target.value);
-              }}
+              disabled
             >
-              <option value={"rexall"}>Rexall Pharmacy</option>
+              {medicalCompanyNames.map((name, i) => (
+                <option key={i} value={name}>
+                  {name}
+                </option>
+              ))}
             </NativeSelect>
           </FormControl>
           <Typography sx={{ marginTop: 4 }}>
@@ -280,7 +341,9 @@ const EditReport = ({ open, setOpen }) => {
             aria-label="outlined primary button group"
             sx={{ marginTop: 3 }}
           >
-            <Button fullWidth>Edit</Button>
+            <Button type="submit" fullWidth>
+              Edit
+            </Button>
           </ButtonGroup>
         </Box>
       </StyledModal>

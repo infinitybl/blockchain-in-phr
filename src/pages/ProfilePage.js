@@ -56,7 +56,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!userType) {
-      navigate("/main");
+      navigate("/");
     }
     async function setup() {
       const [smartContract, accounts] = await Web3Setup();

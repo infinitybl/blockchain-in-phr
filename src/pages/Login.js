@@ -28,6 +28,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Navbar from "../components/Navbar";
 
+import Web3Setup from "../web3";
+
 function Copyright(props) {
   return (
     <Typography
@@ -62,11 +64,23 @@ export default function Login() {
   };
 
   useEffect(() => {
-    if (!userType) {
-      navigate("/signup");
-    } else {
-      navigate("/main");
+    async function setup() {
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
+      setAccount(accounts[0]);
+      console.log("Account: " + accounts[0]);
+      let userTypeResponse = await smartContract.methods
+        .getUserType(accounts[0])
+        .call({ from: accounts[0] });
+      console.log("userType: " + userTypeResponse);
+      if (userTypeResponse) {
+        setUserType(userTypeResponse);
+        navigate("/main");
+      } else {
+        navigate("/signup");
+      }
     }
+    setup();
   }, []);
 
   return (

@@ -13,7 +13,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import ReportIdContext from "../context/ReportIdContext";
 import {
   Add as AddIcon,
   Close,
@@ -45,9 +46,11 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const AddActionPlan = ({ reportId, open, setOpen }) => {
+const AddActionPlan = ({ open, setOpen }) => {
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
+
+  const [reportId, setReportId] = useContext(ReportIdContext);
 
   const [fileBuffer, setFileBuffer] = useState(null);
 
@@ -58,8 +61,7 @@ const AddActionPlan = ({ reportId, open, setOpen }) => {
     setSelectedDate(newDate.toString());
   };
 
-  const [medicalCompanyInvolved, setMedicalCompanyInvolved] =
-    useState("rexall");
+  const [medicalCompanyInvolved, setMedicalCompanyInvolved] = useState("");
 
   useEffect(() => {
     async function setup() {
@@ -102,7 +104,7 @@ const AddActionPlan = ({ reportId, open, setOpen }) => {
         medicalCompanyInvolved: medicalCompanyInvolved,
       });
       requestData = {
-        reportId: encrypt(reportId),
+        reportId: reportId,
         actionPlanCreationDate: encrypt(selectedDate),
         actionPlanDescription: encrypt(data.get("actionPlanDescription")),
         clinicalOutcome: encrypt(data.get("clinicalOutcome")),
@@ -125,23 +127,27 @@ const AddActionPlan = ({ reportId, open, setOpen }) => {
       }
 
       const response = await smartContract.methods
-        .addPatientReport(
+        .addGovernmentActionPlan(
           account,
-          requestData.incidentDate,
-          requestData.incidentDescription,
-          requestData.incidentCategory,
-          requestData.careSetting,
-          requestData.medicationTaken,
+          parseInt(requestData.reportId),
+          requestData.actionPlanCreationDate,
+          requestData.actionPlanDescription,
+          requestData.clinicalOutcome,
+          requestData.contributingFactors,
+          requestData.suspectedMedication,
+          requestData.actionToTake,
+          requestData.medicalCompanyInvolved,
           ipfsHash
         )
         .send({ from: account });
       console.log(response);
     } catch (err) {
       console.log(err);
-      alert("An error occured when adding a new incident report");
+      alert("An error occured when adding a new action plan");
     }
 
     setOpen(false);
+    window.location.reload(false);
   };
 
   return (
@@ -281,7 +287,9 @@ const AddActionPlan = ({ reportId, open, setOpen }) => {
             aria-label="outlined primary button group"
             sx={{ marginTop: 3 }}
           >
-            <Button fullWidth>Create</Button>
+            <Button type="submit" fullWidth>
+              Create
+            </Button>
           </ButtonGroup>
         </Box>
       </StyledModal>

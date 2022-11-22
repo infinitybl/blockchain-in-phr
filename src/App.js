@@ -15,6 +15,7 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 
 import UserTypeContext from "./context/UserTypeContext";
 import AuthContext from "./context/AuthContext";
+import ReportIdContext from "./context/ReportIdContext";
 
 import Web3Setup from "./web3";
 
@@ -24,6 +25,7 @@ function App() {
 
   const [userType, setUserType] = useState("");
   const [isAuth, setIsAuth] = useState(false);
+  const [reportId, setReportId] = useState("");
 
   useEffect(() => {
     document.title = "AERS";
@@ -35,13 +37,6 @@ function App() {
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
-      let response = await smartContract.methods
-        .getUserType(accounts[0])
-        .call({ from: accounts[0] });
-      console.log("userType: " + response);
-      if (response) {
-        setUserType(response);
-      }
     }
     setup();
   }, []);
@@ -57,25 +52,27 @@ function App() {
   return (
     <AuthContext.Provider value={[isAuth, setIsAuth]}>
       <UserTypeContext.Provider value={[userType, setUserType]}>
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-          <ThemeProvider theme={darkTheme}>
-            <Box bgcolor={"background.default"} color={"text.primary"}>
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Homepage />} />
-                  <Route path="login" element={<Login />} />
-                  <Route path="signup" element={<Signup />} />
-                  <Route
-                    path="main"
-                    element={<MainPage mode={mode} setMode={setMode} />}
-                  />
-                  <Route path="profile" element={<ProfilePage />} />
-                  <Route path="*" element={<ErrorPage />} />
-                </Routes>
-              </BrowserRouter>
-            </Box>
-          </ThemeProvider>
-        </LocalizationProvider>
+        <ReportIdContext.Provider value={[reportId, setReportId]}>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
+            <ThemeProvider theme={darkTheme}>
+              <Box bgcolor={"background.default"} color={"text.primary"}>
+                <BrowserRouter>
+                  <Routes>
+                    <Route path="/" element={<Homepage />} />
+                    <Route path="login" element={<Login />} />
+                    <Route path="signup" element={<Signup />} />
+                    <Route
+                      path="main"
+                      element={<MainPage mode={mode} setMode={setMode} />}
+                    />
+                    <Route path="profile" element={<ProfilePage />} />
+                    <Route path="*" element={<ErrorPage />} />
+                  </Routes>
+                </BrowserRouter>
+              </Box>
+            </ThemeProvider>
+          </LocalizationProvider>
+        </ReportIdContext.Provider>
       </UserTypeContext.Provider>
     </AuthContext.Provider>
   );

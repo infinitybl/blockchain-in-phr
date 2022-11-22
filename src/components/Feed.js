@@ -59,6 +59,7 @@ const Feed = ({
           {reports.map((report, i) => (
             <ReportCard
               key={i}
+              reportIdNumber={report.reportId}
               reporterFirstName={report.reporterFirstName}
               reporterLastName={report.reporterLastName}
               incidentDescription={report.incidentDescription}

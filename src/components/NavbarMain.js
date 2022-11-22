@@ -11,9 +11,14 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
+
+import UserTypeContext from "../context/UserTypeContext";
 
 import { Link as LinkReactRouterDom } from "react-router-dom";
+
+import Web3Setup from "../web3";
+import { encrypt, decrypt } from "../crypto";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -46,7 +51,62 @@ const UserBox = styled(Box)(({ theme }) => ({
 }));
 
 const NavbarMain = ({ setSearchText }) => {
+  const [smartContract, setSmartContract] = useState(null);
+  const [account, setAccount] = useState("");
+
   const [open, setOpen] = useState(false);
+
+  const [userType, setUserType] = useContext(UserTypeContext);
+
+  const [avatarText, setAvatarText] = useState("");
+
+  const [avatarColour, setAvatarColour] = useState("red");
+
+  useEffect(() => {
+    async function setup() {
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
+      setAccount(accounts[0]);
+      console.log("Account: " + account);
+      let userTypeResponse = await smartContract.methods
+        .getUserType(accounts[0])
+        .call({ from: accounts[0] });
+      console.log("userType: " + userTypeResponse);
+      if (userTypeResponse) {
+        setUserType(userTypeResponse);
+      }
+      if (userType === "patient") {
+        setAvatarColour("red");
+        let response = await smartContract.methods
+          .getPatientProfile(accounts[0])
+          .call({ from: accounts[0] });
+        const firstName = response["_firstName"]
+          ? decrypt(response["_firstName"])
+          : "";
+        const lastName = response["_lastName"]
+          ? decrypt(response["_lastName"])
+          : "";
+        setAvatarText(firstName.charAt(0) + lastName.charAt(0));
+      } else if (userType === "medicalCompany") {
+        setAvatarColour("orange");
+        let response = await smartContract.methods
+          .getMedicalCompanyProfile(accounts[0])
+          .call({ from: accounts[0] });
+        const companyName = response["companyName"]
+          ? decrypt(response["companyName"])
+          : "";
+        setAvatarText(companyName.charAt(0));
+      } else if (userType === "government") {
+        setAvatarColour("green");
+        let response = await smartContract.methods
+          .getGovernmentProfile(accounts[0])
+          .call({ from: accounts[0] });
+        const name = response["name"] ? decrypt(response["name"]) : "";
+        setAvatarText(name.charAt(0));
+      }
+    }
+    setup();
+  }, []);
 
   return (
     <AppBar position="sticky">
@@ -79,14 +139,47 @@ const NavbarMain = ({ setSearchText }) => {
           <Badge badgeContent={2} color="error">
             <Notifications />
           </Badge> */}
-          <Avatar
-            sx={{ width: 30, height: 30 }}
-            onClick={(e) => setOpen(true)}
-          />
+          {userType === "patient" && (
+            <Avatar
+              sx={{ width: 30, height: 30, bgcolor: avatarColour }}
+              onClick={(e) => setOpen(true)}
+            >
+              {avatarText}
+            </Avatar>
+          )}
+          {userType === "medicalCompany" && (
+            <Avatar
+              sx={{ width: 30, height: 30, bgcolor: avatarColour }}
+              onClick={(e) => setOpen(true)}
+            >
+              {avatarText}
+            </Avatar>
+          )}
+          {userType === "government" && (
+            <Avatar
+              sx={{ width: 30, height: 30, bgcolor: avatarColour }}
+              onClick={(e) => setOpen(true)}
+            >
+              {avatarText}
+            </Avatar>
+          )}
         </Icons>
         <UserBox onClick={(e) => setOpen(true)}>
-          <Avatar sx={{ width: 30, height: 30 }} />
-          <Typography variant="span">John</Typography>
+          {userType === "patient" && (
+            <Avatar sx={{ width: 30, height: 30, bgcolor: avatarColour }}>
+              {avatarText}
+            </Avatar>
+          )}
+          {userType === "medicalCompany" && (
+            <Avatar sx={{ width: 30, height: 30, bgcolor: avatarColour }}>
+              {avatarText}
+            </Avatar>
+          )}
+          {userType === "government" && (
+            <Avatar sx={{ width: 30, height: 30, bgcolor: avatarColour }}>
+              {avatarText}
+            </Avatar>
+          )}
         </UserBox>
       </StyledToolbar>
       <Menu

@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import UserTypeContext from "../context/UserTypeContext";
+import { useNavigate } from "react-router-dom";
 import {
   Add as AddIcon,
   Close,
@@ -34,6 +35,7 @@ import ipfsClient from "../ipfs";
 import { Buffer } from "buffer";
 
 import { encrypt, decrypt } from "../crypto";
+import { Navigate } from "react-router-dom";
 
 const StyledModal = styled(Modal)({
   display: "flex",
@@ -49,6 +51,7 @@ const UserBox = styled(Box)({
 });
 
 const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
+  const navigate = useNavigate();
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
@@ -71,9 +74,6 @@ const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
   const [medicalCompanyInvolved, setMedicalCompanyInvolved] = useState("");
 
   useEffect(() => {
-    setMedicalCompanyInvolved(
-      medicalCompanyNames[0] ? medicalCompanyNames[0] : ""
-    );
     async function setup() {
       const [smartContract, accounts] = await Web3Setup();
       setSmartContract(smartContract);
@@ -93,6 +93,12 @@ const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
     }
     setup();
   }, []);
+
+  useEffect(() => {
+    setMedicalCompanyInvolved(
+      medicalCompanyNames[0] ? medicalCompanyNames[0] : ""
+    );
+  }, [medicalCompanyNames]);
 
   const captureFile = (e) => {
     e.stopPropagation();
@@ -163,6 +169,7 @@ const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
     }
 
     setOpen(false);
+    window.location.reload(false);
   };
 
   return (
@@ -289,6 +296,7 @@ const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
               Medical Company Involved
             </InputLabel>
             <NativeSelect
+              defaultValue={medicalCompanyInvolved}
               inputProps={{
                 name: "medicalCompanyInvolved",
                 id: "uncontrolled-native",

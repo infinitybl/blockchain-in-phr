@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 
+import UserTypeContext from "../context/UserTypeContext";
+import ReportIdContext from "../context/ReportIdContext";
+
+import Web3Setup from "../web3";
+
 import {
   MoreVert,
   MedicalServices,
@@ -14,13 +19,13 @@ import {
   CardContent,
   CardHeader,
   IconButton,
+  responsiveFontSizes,
   Tooltip,
   Typography,
 } from "@mui/material";
 
-import UserTypeContext from "../context/UserTypeContext";
-
 const ReportCard = ({
+  reportIdNumber,
   reporterFirstName,
   reporterLastName,
   incidentDescription,
@@ -31,12 +36,42 @@ const ReportCard = ({
   medicalCompanyInvolved,
   file,
   actionPlan,
+  isResolved,
   addActionPlanModalOpen,
   setAddActionPlanModalOpen,
   editReportModalOpen,
   setEditReportModalOpen,
 }) => {
+  const [smartContract, setSmartContract] = useState(null);
+  const [account, setAccount] = useState("");
   const [userType, setUserType] = useContext(UserTypeContext);
+  const [reportId, setReportId] = useContext(ReportIdContext);
+
+  useEffect(() => {
+    async function setup() {
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
+      setAccount(accounts[0]);
+      console.log("Account: " + accounts[0]);
+    }
+    setup();
+  }, []);
+
+  const resolveActionPlan = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await smartContract.methods
+        .resolveActionPlan(account, parseInt(reportId))
+        .send({ from: account });
+      console.log(response);
+      console.log("Action plan resolved!");
+    } catch (err) {
+      console.log(err);
+      alert("An error occured when resolving an action plan");
+    }
+
+    window.location.reload(false);
+  };
 
   return (
     <Card
@@ -55,11 +90,14 @@ const ReportCard = ({
           </Avatar>
         }
         action={
-          (userType === "patient" && (
+          (userType === "patient" && !isResolved && (
             <Tooltip title="Edit Report">
               <IconButton
                 aria-label="edit report"
-                onClick={(e) => setEditReportModalOpen(true)}
+                onClick={(e) => {
+                  setEditReportModalOpen(true);
+                  setReportId(reportIdNumber);
+                }}
               >
                 <Edit />
               </IconButton>
@@ -68,16 +106,25 @@ const ReportCard = ({
           (userType === "government" && (
             <Tooltip
               title="Create Action Plan"
-              onClick={(e) => setAddActionPlanModalOpen(true)}
+              onClick={(e) => {
+                setAddActionPlanModalOpen(true);
+                setReportId(reportIdNumber);
+              }}
             >
               <IconButton aria-label="create action plan">
                 <Summarize />
               </IconButton>
             </Tooltip>
           )) ||
-          (userType === "medicalCompany" && (
-            <Tooltip title="Update Medication Status">
-              <IconButton aria-label="update medication status">
+          (userType === "medicalCompany" && !isResolved && (
+            <Tooltip
+              title="Resolve Action Plan"
+              onClick={(e) => {
+                setReportId(reportIdNumber);
+                resolveActionPlan(e);
+              }}
+            >
+              <IconButton aria-label="resolve action plan">
                 <MedicalServices />
               </IconButton>
             </Tooltip>
@@ -86,6 +133,11 @@ const ReportCard = ({
         title={reporterFirstName + " " + reporterLastName}
       />
       <CardContent>
+        {isResolved && (
+          <Typography variant="h6" align="center" color="orange">
+            RESOLVED
+          </Typography>
+        )}
         <Typography variant="h6" align="center">
           Report Details
         </Typography>
