@@ -2,6 +2,8 @@ import React, { useState, useEffect, useContext } from "react";
 
 import UserTypeContext from "../context/UserTypeContext";
 
+import { useNavigate } from "react-router-dom";
+
 import {
   Avatar,
   Button,
@@ -37,6 +39,7 @@ import { encrypt, decrypt } from "../crypto";
 const theme = createTheme();
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
@@ -52,6 +55,9 @@ export default function ProfilePage() {
   const [bloodType, setBloodType] = useState("O-");
 
   useEffect(() => {
+    if (!userType) {
+      navigate("/main");
+    }
     async function setup() {
       const [smartContract, accounts] = await Web3Setup();
       setSmartContract(smartContract);

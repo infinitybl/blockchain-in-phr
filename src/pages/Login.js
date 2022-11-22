@@ -108,14 +108,14 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            {/* <Button
+            <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Log In
-            </Button> */}
+            </Button>
             {/* <Grid container>
               <Grid item xs></Grid>
               <Grid item>

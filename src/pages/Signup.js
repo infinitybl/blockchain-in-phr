@@ -184,13 +184,9 @@ export default function Signup() {
   };
 
   useEffect(() => {
-    async function setup() {
-      const [smartContract, accounts] = await Web3Setup();
-      setSmartContract(smartContract);
-      setAccount(accounts[0]);
-      console.log("Account: " + account);
+    if (userType) {
+      navigate("/main");
     }
-    setup();
   }, []);
 
   return (

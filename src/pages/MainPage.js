@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import UserTypeContext from "../context/UserTypeContext";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Feed from "../components/Feed";
 import Rightbar from "../components/Rightbar";
@@ -14,6 +15,7 @@ import Web3Setup from "../web3";
 import { encrypt, decrypt } from "../crypto";
 
 function MainPage({ setMode, mode }) {
+  const navigate = useNavigate();
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
@@ -33,6 +35,9 @@ function MainPage({ setMode, mode }) {
   const [reportsFilterType, setReportsFilterType] = useState("all");
 
   useEffect(() => {
+    if (!userType) {
+      navigate("/");
+    }
     async function setup() {
       const [smartContract, accounts] = await Web3Setup();
       setSmartContract(smartContract);
