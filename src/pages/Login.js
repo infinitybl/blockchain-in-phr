@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+
+import UserTypeContext from "../context/UserTypeContext";
 
 import { useNavigate } from "react-router-dom";
 
@@ -26,8 +28,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import Navbar from "../components/Navbar";
 
-import Web3Setup from "../web3";
-
 function Copyright(props) {
   return (
     <Typography
@@ -50,6 +50,8 @@ export default function Login() {
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
+  const [userType, setUserType] = useContext(UserTypeContext);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -60,22 +62,11 @@ export default function Login() {
   };
 
   useEffect(() => {
-    async function setup() {
-      try {
-        const [smartContract, accounts] = await Web3Setup();
-        setSmartContract(smartContract);
-        setAccount(accounts[0]);
-        console.log("Account: " + accounts[0]);
-        if (accounts[0]) {
-          navigate("/main");
-        } else {
-          alert("Error");
-        }
-      } catch (err) {
-        alert("Error");
-      }
+    if (!userType) {
+      navigate("/signup");
+    } else {
+      navigate("/main");
     }
-    setup();
   }, []);
 
   return (
@@ -117,22 +108,22 @@ export default function Login() {
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
             /> */}
-            <Button
+            {/* <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
               Log In
-            </Button>
-            <Grid container>
+            </Button> */}
+            {/* <Grid container>
               <Grid item xs></Grid>
               <Grid item>
                 <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>
-            </Grid>
+            </Grid> */}
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

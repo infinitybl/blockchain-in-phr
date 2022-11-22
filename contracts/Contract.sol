@@ -2,6 +2,16 @@ pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 contract Contract {
+  mapping(address => string) userTypes;
+
+  function getUserType(address _addr)
+    public
+    view
+    returns (string memory userType)
+  {
+    return userTypes[_addr];
+  }
+
   uint256 public reportIndex = 0;
 
   struct ActionPlan {
@@ -62,6 +72,7 @@ contract Contract {
     require(!isGovernment[_addr], "Government is already registered");
     governmentList.push(_addr);
     isGovernment[_addr] = true;
+    userTypes[_addr] = "government";
     governments[_addr].id = governmentListIndex;
     governments[_addr].name = _name;
     governments[_addr].country = _country;
@@ -73,46 +84,42 @@ contract Contract {
     governmentListIndex = governmentListIndex + 1;
   }
 
-  function getAllGovernmentAddresses() public view returns (address[] memory) {
-    return governmentList;
-  }
-
-  function getGovernmentById(uint256 _id)
-    public
-    view
-    returns (
-      uint256 id,
-      string memory name,
-      string memory country,
-      string memory phone,
-      string memory email,
-      string memory locationAddress,
-      address addr,
-      bool isApproved
-    )
-  {
-    uint256 i = 0;
-    for (; i < governmentList.length; i++) {
-      if (governments[governmentList[i]].id == _id) {
-        break;
-      }
-    }
-    require(
-      governments[governmentList[i]].id == _id,
-      "Government could not be found with the given ID"
-    );
-    government memory matchedEntry = governments[governmentList[i]];
-    return (
-      matchedEntry.id,
-      matchedEntry.name,
-      matchedEntry.country,
-      matchedEntry.phone,
-      matchedEntry.email,
-      matchedEntry.locationAddress,
-      matchedEntry.addr,
-      matchedEntry.isApproved
-    );
-  }
+  // function getGovernmentById(uint256 _id)
+  //   public
+  //   view
+  //   returns (
+  //     uint256 id,
+  //     string memory name,
+  //     string memory country,
+  //     string memory phone,
+  //     string memory email,
+  //     string memory locationAddress,
+  //     address addr,
+  //     bool isApproved
+  //   )
+  // {
+  //   uint256 i = 0;
+  //   for (; i < governmentList.length; i++) {
+  //     if (governments[governmentList[i]].id == _id) {
+  //       break;
+  //     }
+  //   }
+  //   require(
+  //     governments[governmentList[i]].id == _id,
+  //     "Government could not be found with the given ID"
+  //   );
+  //   government memory matchedEntry = governments[governmentList[i]];
+  //   return (
+  //     matchedEntry.id,
+  //     matchedEntry.name,
+  //     matchedEntry.country,
+  //     matchedEntry.phone,
+  //     matchedEntry.email,
+  //     matchedEntry.locationAddress,
+  //     matchedEntry.addr,
+  //     matchedEntry.isApproved
+  //   );
+  // }
 
   function getGovernmentProfile(address _address)
     public
@@ -203,6 +210,7 @@ contract Contract {
     require(!isMedicalCompany[_addr], "Medical company is already registered");
     medicalCompanyList.push(_addr);
     isMedicalCompany[_addr] = true;
+    userTypes[_addr] = "medicalCompany";
     medicalCompanies[_addr] = medicalCompany(
       medicalCompanyListIndex,
       _companyName,
@@ -216,52 +224,44 @@ contract Contract {
     medicalCompanyListIndex = medicalCompanyListIndex + 1;
   }
 
-  function getAllMedicalCompanyAddresses()
-    public
-    view
-    returns (address[] memory)
-  {
-    return medicalCompanyList;
-  }
-
-  function getMedicalCompanyById(uint256 _id)
-    public
-    view
-    returns (
-      uint256 id,
-      string memory companyName,
-      string memory companyType,
-      string memory phone,
-      string memory email,
-      string memory locationAddress,
-      address addr,
-      bool isApproved
-    )
-  {
-    uint256 i = 0;
-    for (; i < medicalCompanyList.length; i++) {
-      if (medicalCompanies[medicalCompanyList[i]].id == _id) {
-        break;
-      }
-    }
-    require(
-      medicalCompanies[medicalCompanyList[i]].id == _id,
-      "MedicalCompany could not be found with the given ID"
-    );
-    medicalCompany memory matchedEntry = medicalCompanies[
-      medicalCompanyList[i]
-    ];
-    return (
-      matchedEntry.id,
-      matchedEntry.companyName,
-      matchedEntry.companyType,
-      matchedEntry.phone,
-      matchedEntry.email,
-      matchedEntry.locationAddress,
-      matchedEntry.addr,
-      matchedEntry.isApproved
-    );
-  }
+  // function getMedicalCompanyById(uint256 _id)
+  //   public
+  //   view
+  //   returns (
+  //     uint256 id,
+  //     string memory companyName,
+  //     string memory companyType,
+  //     string memory phone,
+  //     string memory email,
+  //     string memory locationAddress,
+  //     address addr,
+  //     bool isApproved
+  //   )
+  // {
+  //   uint256 i = 0;
+  //   for (; i < medicalCompanyList.length; i++) {
+  //     if (medicalCompanies[medicalCompanyList[i]].id == _id) {
+  //       break;
+  //     }
+  //   }
+  //   require(
+  //     medicalCompanies[medicalCompanyList[i]].id == _id,
+  //     "MedicalCompany could not be found with the given ID"
+  //   );
+  //   medicalCompany memory matchedEntry = medicalCompanies[
+  //     medicalCompanyList[i]
+  //   ];
+  //   return (
+  //     matchedEntry.id,
+  //     matchedEntry.companyName,
+  //     matchedEntry.companyType,
+  //     matchedEntry.phone,
+  //     matchedEntry.email,
+  //     matchedEntry.locationAddress,
+  //     matchedEntry.addr,
+  //     matchedEntry.isApproved
+  //   );
+  // }
 
   function getMedicalCompanyProfile(address _address)
     public
@@ -328,6 +328,7 @@ contract Contract {
     require(!isPatient[msg.sender], "Patient is already registered");
     patientList.push(msg.sender);
     isPatient[msg.sender] = true;
+    userTypes[msg.sender] = "patient";
     patients[msg.sender].id = patientListIndex;
     patients[msg.sender].firstName = _firstName;
     patients[msg.sender].lastName = _lastName;
@@ -339,10 +340,6 @@ contract Contract {
     patients[msg.sender].homeAddress = _homeAddress;
     patients[msg.sender].addr = msg.sender;
     patientListIndex = patientListIndex + 1;
-  }
-
-  function getAllPatientAddresses() public view returns (address[] memory) {
-    return patientList;
   }
 
   function getPatientProfile(address _addr)

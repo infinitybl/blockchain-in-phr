@@ -110,12 +110,12 @@ const EditReport = ({ open, setOpen }) => {
         medicalCompanyInvolved: medicalCompanyInvolved,
       });
       requestData = {
-        incidentDate: selectedDate,
-        incidentDescription: data.get("incidentDescription"),
-        incidentCategory: data.get("incidentCategory"),
-        careSetting: data.get("careSetting"),
-        medicationTaken: data.get("medicationTaken"),
-        medicalCompanyInvolved: medicalCompanyInvolved,
+        incidentDate: encrypt(selectedDate),
+        incidentDescription: encrypt(data.get("incidentDescription")),
+        incidentCategory: encrypt(data.get("incidentCategory")),
+        careSetting: encrypt(data.get("careSetting")),
+        medicationTaken: encrypt(data.get("medicationTaken")),
+        medicalCompanyInvolved: encrypt(medicalCompanyInvolved),
       };
 
       let ipfsHash = "";

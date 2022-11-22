@@ -32,6 +32,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { MuiTelInput } from "mui-tel-input";
 
 import Web3Setup from "../web3";
+import { encrypt, decrypt } from "../crypto";
 
 const theme = createTheme();
 
@@ -56,31 +57,37 @@ export default function ProfilePage() {
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + accounts[0]);
+      console.log("User Type: " + userType);
+
       if (userType === "patient") {
-        const response = await smartContract.methods
+        let response = await smartContract.methods
           .getPatientProfile(accounts[0])
           .call({ from: accounts[0] });
         console.log("profileData: " + JSON.stringify(response, null, 2));
         setProfileData(response);
-        setPhone(response["_phone"] ? response["_phone"] : "");
+        setPhone(response["_phone"] ? decrypt(response["_phone"]) : "");
         setSelectedDate(
-          response["_dateOfBirth"] ? moment(response["_dateOfBirth"]) : moment()
+          response["_dateOfBirth"]
+            ? decrypt(response["_dateOfBirth"])
+            : new Date().toString()
         );
-        setBloodType(response["_bloodType"] ? response["_bloodType"] : "");
+        setBloodType(
+          response["_bloodType"] ? decrypt(response["_bloodType"]) : ""
+        );
       } else if (userType === "medicalCompany") {
         const response = await smartContract.methods
           .getMedicalCompanyProfile(accounts[0])
           .call({ from: accounts[0] });
         console.log("profileData: " + JSON.stringify(response, null, 2));
         setProfileData(response);
-        setPhone(response["_phone"] ? response["_phone"] : "");
+        setPhone(response["phone"] ? decrypt(response["phone"]) : "");
       } else if (userType === "government") {
         const response = await smartContract.methods
           .getGovernmentProfile(accounts[0])
           .call({ from: accounts[0] });
         console.log("profileData: " + JSON.stringify(response, null, 2));
         setProfileData(response);
-        setPhone(response["_phone"] ? response["_phone"] : "");
+        setPhone(response["phone"] ? decrypt(response["phone"]) : "");
       }
     }
     setup();
@@ -150,7 +157,7 @@ export default function ProfilePage() {
                       label="First Name"
                       value={
                         profileData["_firstName"]
-                          ? profileData["_firstName"]
+                          ? decrypt(profileData["_firstName"])
                           : ""
                       }
                       autoFocus
@@ -167,7 +174,9 @@ export default function ProfilePage() {
                       label="Last Name"
                       name="lastName"
                       value={
-                        profileData["_lastName"] ? profileData["_lastName"] : ""
+                        profileData["_lastName"]
+                          ? decrypt(profileData["_lastName"])
+                          : ""
                       }
                       autoComplete="family-name"
                       inputProps={{
@@ -201,7 +210,11 @@ export default function ProfilePage() {
                       fullWidth
                       id="email"
                       name="email"
-                      value={profileData["_email"] ? profileData["_email"] : ""}
+                      value={
+                        profileData["_email"]
+                          ? decrypt(profileData["_email"])
+                          : ""
+                      }
                       label="Email Address"
                       autoComplete="email"
                       inputProps={{
@@ -217,7 +230,9 @@ export default function ProfilePage() {
                       name="gender"
                       label="Gender"
                       value={
-                        profileData["_gender"] ? profileData["_gender"] : ""
+                        profileData["_gender"]
+                          ? decrypt(profileData["_gender"])
+                          : ""
                       }
                       autoComplete="gender"
                       inputProps={{
@@ -234,7 +249,7 @@ export default function ProfilePage() {
                       label="Home Address"
                       value={
                         profileData["_homeAddress"]
-                          ? profileData["_homeAddress"]
+                          ? decrypt(profileData["_homeAddress"])
                           : ""
                       }
                       autoComplete="home-address"
@@ -284,8 +299,8 @@ export default function ProfilePage() {
                       id="companyName"
                       label="Company Name"
                       value={
-                        profileData["_companyName"]
-                          ? profileData["_companyName"]
+                        profileData["companyName"]
+                          ? decrypt(profileData["companyName"])
                           : ""
                       }
                       autoFocus
@@ -299,8 +314,8 @@ export default function ProfilePage() {
                       autoComplete="company-type"
                       name="companyType"
                       value={
-                        profileData["_companyType"]
-                          ? profileData["_companyType"]
+                        profileData["companyType"]
+                          ? decrypt(profileData["companyType"])
                           : ""
                       }
                       required
@@ -329,7 +344,11 @@ export default function ProfilePage() {
                       id="email"
                       name="email"
                       label="Email Address"
-                      value={profileData["_email"] ? profileData["_email"] : ""}
+                      value={
+                        profileData["email"]
+                          ? decrypt(profileData["email"])
+                          : ""
+                      }
                       autoComplete="email"
                       inputProps={{
                         readOnly: true,
@@ -344,8 +363,8 @@ export default function ProfilePage() {
                       name="locationAddress"
                       label="Office Location Address"
                       value={
-                        profileData["_locationAddress"]
-                          ? profileData["locationAddress"]
+                        profileData["locationAddress"]
+                          ? decrypt(profileData["locationAddress"])
                           : ""
                       }
                       autoComplete="location-address"
@@ -366,7 +385,9 @@ export default function ProfilePage() {
                       fullWidth
                       id="healthMinistryName"
                       label="Health Ministry Name"
-                      value={profileData["_name"] ? profileData["_name"] : ""}
+                      value={
+                        profileData["name"] ? decrypt(profileData["name"]) : ""
+                      }
                       autoFocus
                       inputProps={{
                         readOnly: true,
@@ -382,7 +403,9 @@ export default function ProfilePage() {
                       id="country"
                       label="Country"
                       value={
-                        profileData["_country"] ? profileData["_country"] : ""
+                        profileData["country"]
+                          ? decrypt(profileData["country"])
+                          : ""
                       }
                       autoFocus
                       inputProps={{
@@ -406,7 +429,11 @@ export default function ProfilePage() {
                       id="email"
                       name="email"
                       label="Email Address"
-                      value={profileData["_email"] ? profileData["_email"] : ""}
+                      value={
+                        profileData["email"]
+                          ? decrypt(profileData["email"])
+                          : ""
+                      }
                       autoComplete="email"
                       inputProps={{
                         readOnly: true,
@@ -421,8 +448,8 @@ export default function ProfilePage() {
                       name="locationAddress"
                       label="Office Location Address"
                       value={
-                        profileData["_locationAddress"]
-                          ? profileData["_locationAddress"]
+                        profileData["locationAddress"]
+                          ? decrypt(profileData["locationAddress"])
                           : ""
                       }
                       autoComplete="location-address"

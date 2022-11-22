@@ -34,6 +34,8 @@ import { MuiTelInput } from "mui-tel-input";
 
 import Web3Setup from "../web3";
 
+import { encrypt, decrypt } from "../crypto";
+
 function Copyright(props) {
   return (
     <Typography
@@ -56,6 +58,7 @@ export default function Signup() {
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
+  const [localUserType, setLocalUserType] = useState("patient");
   const [userType, setUserType] = useContext(UserTypeContext);
   const [phone, setPhone] = useState("");
 
@@ -76,7 +79,7 @@ export default function Signup() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     let requestData = {};
-    if (userType === "patient") {
+    if (localUserType === "patient") {
       console.log({
         firstName: data.get("firstName"),
         lastName: data.get("lastName"),
@@ -88,14 +91,14 @@ export default function Signup() {
         homeAddress: data.get("homeAddress"),
       });
       requestData = {
-        firstName: data.get("firstName"),
-        lastName: data.get("lastName"),
-        phone: phone,
-        email: data.get("email"),
-        gender: data.get("gender"),
-        dateOfBirth: selectedDate,
-        bloodType: bloodType,
-        homeAddress: data.get("homeAddress"),
+        firstName: encrypt(data.get("firstName")),
+        lastName: encrypt(data.get("lastName")),
+        phone: encrypt(phone),
+        email: encrypt(data.get("email")),
+        gender: encrypt(data.get("gender")),
+        dateOfBirth: encrypt(selectedDate),
+        bloodType: encrypt(bloodType),
+        homeAddress: encrypt(data.get("homeAddress")),
       };
       try {
         const response = await smartContract.methods
@@ -115,7 +118,7 @@ export default function Signup() {
       } catch (e) {
         alert("Error");
       }
-    } else if (userType === "medicalCompany") {
+    } else if (localUserType === "medicalCompany") {
       console.log({
         companyName: data.get("companyName"),
         companyType: data.get("companyType"),
@@ -124,11 +127,11 @@ export default function Signup() {
         locationAddress: data.get("locationAddress"),
       });
       requestData = {
-        companyName: data.get("companyName"),
-        companyType: data.get("companyType"),
-        phone: phone,
-        email: data.get("email"),
-        locationAddress: data.get("locationAddress"),
+        companyName: encrypt(data.get("companyName")),
+        companyType: encrypt(data.get("companyType")),
+        phone: encrypt(phone),
+        email: encrypt(data.get("email")),
+        locationAddress: encrypt(data.get("locationAddress")),
       };
       try {
         const response = await smartContract.methods
@@ -146,7 +149,7 @@ export default function Signup() {
       } catch (e) {
         alert("Error");
       }
-    } else if (userType === "government") {
+    } else if (localUserType === "government") {
       console.log({
         name: data.get("healthMinistryName"),
         country: data.get("country"),
@@ -155,11 +158,11 @@ export default function Signup() {
         locationAddress: data.get("locationAddress"),
       });
       requestData = {
-        name: data.get("healthMinistryName"),
-        country: data.get("country"),
-        phone: phone,
-        email: data.get("email"),
-        locationAddress: data.get("locationAddress"),
+        name: encrypt(data.get("healthMinistryName")),
+        country: encrypt(data.get("country")),
+        phone: encrypt(phone),
+        email: encrypt(data.get("email")),
+        locationAddress: encrypt(data.get("locationAddress")),
       };
       try {
         const response = await smartContract.methods
@@ -213,20 +216,22 @@ export default function Signup() {
             <InputLabel variant="standard">Select User Type</InputLabel>
             <ButtonGroup disableElevation variant="contained" color="primary">
               <Button
-                color={userType === "patient" ? "secondary" : "primary"}
-                onClick={() => setUserType("patient")}
+                color={localUserType === "patient" ? "secondary" : "primary"}
+                onClick={(e) => setLocalUserType("patient")}
               >
                 Patient
               </Button>
               <Button
-                color={userType === "medicalCompany" ? "secondary" : "primary"}
-                onClick={() => setUserType("medicalCompany")}
+                color={
+                  localUserType === "medicalCompany" ? "secondary" : "primary"
+                }
+                onClick={(e) => setLocalUserType("medicalCompany")}
               >
                 Medical Company
               </Button>
               <Button
-                color={userType === "government" ? "secondary" : "primary"}
-                onClick={() => setUserType("government")}
+                color={localUserType === "government" ? "secondary" : "primary"}
+                onClick={(e) => setLocalUserType("government")}
               >
                 Health Ministry
               </Button>
@@ -249,7 +254,7 @@ export default function Signup() {
                   autoComplete="metamask-wallet-address"
                 />
               </Grid> */}
-              {userType === "patient" && (
+              {localUserType === "patient" && (
                 <>
                   <Grid item xs={12} sm={6}>
                     <TextField
@@ -349,7 +354,7 @@ export default function Signup() {
                   </Grid>
                 </>
               )}
-              {userType === "medicalCompany" && (
+              {localUserType === "medicalCompany" && (
                 <>
                   <Grid item xs={12}>
                     <TextField
@@ -402,7 +407,7 @@ export default function Signup() {
                   </Grid>
                 </>
               )}
-              {userType === "government" && (
+              {localUserType === "government" && (
                 <>
                   <Grid item xs={12}>
                     <TextField

@@ -22,6 +22,10 @@ function MainPage({ setMode, mode }) {
   const [addActionPlanModalOpen, setAddActionPlanModalOpen] = useState(false);
   const [editReportModalOpen, setEditReportModalOpen] = useState(false);
 
+  const [patientFirstNames, setPatientFirstNames] = useState([]);
+  const [patientLastNames, setPatientLastNames] = useState([]);
+  const [medicalCompanyNames, setMedicalCompanyNames] = useState([]);
+  const [governmentNames, setGovernmentNames] = useState([]);
   const [reports, setReports] = useState([]);
 
   const [searchText, setSearchText] = useState("");
@@ -34,30 +38,47 @@ function MainPage({ setMode, mode }) {
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + accounts[0]);
+      const getAllNamesResponse = await smartContract.methods
+        .getAllNames(accounts[0])
+        .call({ from: accounts[0] });
+
+      setPatientFirstNames(
+        getAllNamesResponse["_patientFirstNames"].map((name) => decrypt(name))
+      );
+      setPatientLastNames(
+        getAllNamesResponse["_patientLastNames"].map((name) => decrypt(name))
+      );
+      setMedicalCompanyNames(
+        getAllNamesResponse["_medicalCompanyNames"].map((name) => decrypt(name))
+      );
+      setGovernmentNames(
+        getAllNamesResponse["_governmentNames"].map((name) => decrypt(name))
+      );
+
       const getReportsResponse = await smartContract.methods
         .getReports(accounts[0])
         .call({ from: accounts[0] });
 
       const reports = getReportsResponse.map((report) => ({
-        reportId: report[0],
-        reporterFirstName: report[1],
-        reporterLastName: report[2],
-        incidentDate: report[3],
-        incidentDescription: report[4],
-        incidentCategory: report[5],
-        careSetting: report[6],
-        medicationTaken: report[7],
-        medicalCompanyInvolved: report[8],
+        reportId: decrypt(report[0]),
+        reporterFirstName: decrypt(report[1]),
+        reporterLastName: decrypt(report[2]),
+        incidentDate: decrypt(report[3]),
+        incidentDescription: decrypt(report[4]),
+        incidentCategory: decrypt(report[5]),
+        careSetting: decrypt(report[6]),
+        medicationTaken: decrypt(report[7]),
+        medicalCompanyInvolved: decrypt(report[8]),
         ipfsHash: decrypt(report[9]),
         actionPlan: {
-          creator: report[10][0],
-          actionPlanCreationDate: report[10][1],
-          actionPlanDescription: report[10][2],
-          clinicalOutcome: report[10][3],
-          contributingFactors: report[10][4],
-          suspectedMedication: report[10][5],
-          actionToTake: report[10][6],
-          medicalCompanyInvolved: report[10][7],
+          creator: decrypt(report[10][0]),
+          actionPlanCreationDate: decrypt(report[10][1]),
+          actionPlanDescription: decrypt(report[10][2]),
+          clinicalOutcome: decrypt(report[10][3]),
+          contributingFactors: decrypt(report[10][4]),
+          suspectedMedication: decrypt(report[10][5]),
+          actionToTake: decrypt(report[10][6]),
+          medicalCompanyInvolved: decrypt(report[10][7]),
           ipfsHash: decrypt(report[10][8]),
         },
         isResolved: report[11],
@@ -65,10 +86,6 @@ function MainPage({ setMode, mode }) {
 
       console.log("reports: " + JSON.stringify(reports, null, 2));
       setReports(reports);
-
-      const getAllNamesResponse = await smartContract.methods
-        .getAllNames(accounts[0])
-        .call({ from: accounts[0] });
 
       console.log(
         "getAllNamesResponse: " + JSON.stringify(getAllNamesResponse, null, 2)
@@ -88,25 +105,25 @@ function MainPage({ setMode, mode }) {
         .call({ from: accounts[0] });
 
       let reports = getReportsResponse.map((report) => ({
-        reportId: report[0],
-        reporterFirstName: report[1],
-        reporterLastName: report[2],
-        incidentDate: report[3],
-        incidentDescription: report[4],
-        incidentCategory: report[5],
-        careSetting: report[6],
-        medicationTaken: report[7],
-        medicalCompanyInvolved: report[8],
+        reportId: decrypt(report[0]),
+        reporterFirstName: decrypt(report[1]),
+        reporterLastName: decrypt(report[2]),
+        incidentDate: decrypt(report[3]),
+        incidentDescription: decrypt(report[4]),
+        incidentCategory: decrypt(report[5]),
+        careSetting: decrypt(report[6]),
+        medicationTaken: decrypt(report[7]),
+        medicalCompanyInvolved: decrypt(report[8]),
         ipfsHash: decrypt(report[9]),
         actionPlan: {
-          creator: report[10][0],
-          actionPlanCreationDate: report[10][1],
-          actionPlanDescription: report[10][2],
-          clinicalOutcome: report[10][3],
-          contributingFactors: report[10][4],
-          suspectedMedication: report[10][5],
-          actionToTake: report[10][6],
-          medicalCompanyInvolved: report[10][7],
+          creator: decrypt(report[10][0]),
+          actionPlanCreationDate: decrypt(report[10][1]),
+          actionPlanDescription: decrypt(report[10][2]),
+          clinicalOutcome: decrypt(report[10][3]),
+          contributingFactors: decrypt(report[10][4]),
+          suspectedMedication: decrypt(report[10][5]),
+          actionToTake: decrypt(report[10][6]),
+          medicalCompanyInvolved: decrypt(report[10][7]),
           ipfsHash: decrypt(report[10][8]),
         },
         isResolved: report[11],
@@ -163,14 +180,23 @@ function MainPage({ setMode, mode }) {
           editReportModalOpen={editReportModalOpen}
           setEditReportModalOpen={setEditReportModalOpen}
         />
-        <Rightbar />
+        <Rightbar
+          patientFirstNames={patientFirstNames}
+          patientLastNames={patientLastNames}
+          medicalCompanyNames={medicalCompanyNames}
+          governmentNames={governmentNames}
+        />
       </Stack>
       <Box
         sx={{
           marginTop: { xs: "50px", lg: 0 },
         }}
       >
-        <AddReport setMode={setMode} mode={mode} />
+        <AddReport
+          medicalCompanyNames={medicalCompanyNames}
+          setMode={setMode}
+          mode={mode}
+        />
         <AddActionPlan
           open={addActionPlanModalOpen}
           setOpen={setAddActionPlanModalOpen}

@@ -16,13 +16,35 @@ import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import UserTypeContext from "./context/UserTypeContext";
 import AuthContext from "./context/AuthContext";
 
+import Web3Setup from "./web3";
+
 function App() {
-  const [userType, setUserType] = useState("patient");
+  const [smartContract, setSmartContract] = useState(null);
+  const [account, setAccount] = useState("");
+
+  const [userType, setUserType] = useState("");
   const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     document.title = "AERS";
   });
+
+  useEffect(() => {
+    async function setup() {
+      const [smartContract, accounts] = await Web3Setup();
+      setSmartContract(smartContract);
+      setAccount(accounts[0]);
+      console.log("Account: " + account);
+      let response = await smartContract.methods
+        .getUserType(accounts[0])
+        .call({ from: accounts[0] });
+      console.log("userType: " + response);
+      if (response) {
+        setUserType(response);
+      }
+    }
+    setup();
+  }, []);
 
   const [mode, setMode] = useState("light");
 

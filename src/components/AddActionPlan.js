@@ -102,14 +102,14 @@ const AddActionPlan = ({ reportId, open, setOpen }) => {
         medicalCompanyInvolved: medicalCompanyInvolved,
       });
       requestData = {
-        reportId: reportId,
-        actionPlanCreationDate: selectedDate,
-        actionPlanDescription: data.get("actionPlanDescription"),
-        clinicalOutcome: data.get("clinicalOutcome"),
-        contributingFactors: data.get("contributingFactors"),
-        suspectedMedication: data.get("suspectedMedication"),
-        actionToTake: data.get("actionToTake"),
-        medicalCompanyInvolved: medicalCompanyInvolved,
+        reportId: encrypt(reportId),
+        actionPlanCreationDate: encrypt(selectedDate),
+        actionPlanDescription: encrypt(data.get("actionPlanDescription")),
+        clinicalOutcome: encrypt(data.get("clinicalOutcome")),
+        contributingFactors: encrypt(data.get("contributingFactors")),
+        suspectedMedication: encrypt(data.get("suspectedMedication")),
+        actionToTake: encrypt(data.get("actionToTake")),
+        medicalCompanyInvolved: encrypt(medicalCompanyInvolved),
       };
 
       let ipfsHash = "";

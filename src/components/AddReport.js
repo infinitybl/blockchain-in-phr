@@ -13,7 +13,8 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import UserTypeContext from "../context/UserTypeContext";
 import {
   Add as AddIcon,
   Close,
@@ -47,9 +48,14 @@ const UserBox = styled(Box)({
   marginBottom: "20px",
 });
 
-const AddReport = ({ setMode, mode }) => {
+const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
+
+  const [userType, setUserType] = useContext(UserTypeContext);
+
+  const [reporterFirstName, setReporterFirstName] = useState("");
+  const [reporterLastName, setReporterLastName] = useState("");
 
   const [open, setOpen] = useState(false);
 
@@ -62,15 +68,28 @@ const AddReport = ({ setMode, mode }) => {
     setSelectedDate(newDate.toString());
   };
 
-  const [medicalCompanyInvolved, setMedicalCompanyInvolved] =
-    useState("rexall");
+  const [medicalCompanyInvolved, setMedicalCompanyInvolved] = useState("");
 
   useEffect(() => {
+    setMedicalCompanyInvolved(
+      medicalCompanyNames[0] ? medicalCompanyNames[0] : ""
+    );
     async function setup() {
       const [smartContract, accounts] = await Web3Setup();
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
+      if (userType === "patient") {
+        let response = await smartContract.methods
+          .getPatientProfile(accounts[0])
+          .call({ from: accounts[0] });
+        setReporterFirstName(
+          response["_firstName"] ? decrypt(response["_firstName"]) : ""
+        );
+        setReporterLastName(
+          response["_lastName"] ? decrypt(response["_lastName"]) : ""
+        );
+      }
     }
     setup();
   }, []);
@@ -104,12 +123,12 @@ const AddReport = ({ setMode, mode }) => {
         medicalCompanyInvolved: medicalCompanyInvolved,
       });
       requestData = {
-        incidentDate: selectedDate,
-        incidentDescription: data.get("incidentDescription"),
-        incidentCategory: data.get("incidentCategory"),
-        careSetting: data.get("careSetting"),
-        medicationTaken: data.get("medicationTaken"),
-        medicalCompanyInvolved: medicalCompanyInvolved,
+        incidentDate: encrypt(selectedDate),
+        incidentDescription: encrypt(data.get("incidentDescription")),
+        incidentCategory: encrypt(data.get("incidentCategory")),
+        careSetting: encrypt(data.get("careSetting")),
+        medicationTaken: encrypt(data.get("medicationTaken")),
+        medicalCompanyInvolved: encrypt(medicalCompanyInvolved),
       };
 
       let ipfsHash = "";
@@ -207,9 +226,11 @@ const AddReport = ({ setMode, mode }) => {
             <Typography fontWeight={600} variant="span">
               Reporter:
             </Typography>
-            <Avatar sx={{ width: 30, height: 30 }} />
+            <Avatar sx={{ width: 30, height: 30, bgcolor: "red" }}>
+              {reporterFirstName.charAt(0) + reporterLastName.charAt(0)}
+            </Avatar>
             <Typography fontWeight={500} variant="span">
-              John Doe
+              {reporterFirstName} {reporterLastName}
             </Typography>
           </UserBox>
           <TextField
@@ -268,7 +289,6 @@ const AddReport = ({ setMode, mode }) => {
               Medical Company Involved
             </InputLabel>
             <NativeSelect
-              defaultValue={"rexall"}
               inputProps={{
                 name: "medicalCompanyInvolved",
                 id: "uncontrolled-native",
@@ -278,7 +298,11 @@ const AddReport = ({ setMode, mode }) => {
                 setMedicalCompanyInvolved(e.target.value);
               }}
             >
-              <option value={"rexall"}>Rexall Pharmacy</option>
+              {medicalCompanyNames.map((name, i) => (
+                <option key={i} value={name}>
+                  {name}
+                </option>
+              ))}
             </NativeSelect>
           </FormControl>
           <TextField
