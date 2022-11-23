@@ -184,29 +184,6 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
 
   return (
     <>
-      {!open && (
-        <>
-          <Tooltip
-            onClick={(e) => setOpen(true)}
-            title="Add"
-            sx={{
-              position: "fixed",
-              bottom: 20,
-              left: 20,
-            }}
-          >
-            <Fab color="primary" aria-label="add" variant="extended">
-              <AddIcon />
-              <Typography
-                variant="span"
-                sx={{ display: { xs: "none", sm: "block" } }}
-              >
-                Edit Incident Report
-              </Typography>
-            </Fab>
-          </Tooltip>
-        </>
-      )}
       <StyledModal
         open={open}
         onClose={(e) => setOpen(false)}

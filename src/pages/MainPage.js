@@ -10,6 +10,8 @@ import AddReport from "../components/AddReport";
 import AddActionPlan from "../components/AddActionPlan";
 import EditReport from "../components/EditReport";
 
+import ChangeTheme from "../components/ChangeTheme";
+
 import Web3Setup from "../web3";
 
 import { encrypt, decrypt } from "../crypto";
@@ -224,6 +226,7 @@ function MainPage({ setMode, mode }) {
             setOpen={setEditReportModalOpen}
           />
         )}
+        <ChangeTheme setMode={setMode} mode={mode} />
       </Box>
     </Box>
   );

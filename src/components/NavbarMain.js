@@ -108,6 +108,48 @@ const NavbarMain = ({ setSearchText }) => {
     setup();
   }, []);
 
+  useEffect(() => {
+    async function setup() {
+      let userTypeResponse = await smartContract.methods
+        .getUserType(account)
+        .call({ from: account });
+      console.log("userType: " + userTypeResponse);
+      if (userTypeResponse) {
+        setUserType(userTypeResponse);
+      }
+      if (userType === "patient") {
+        setAvatarColour("red");
+        let response = await smartContract.methods
+          .getPatientProfile(account)
+          .call({ from: account });
+        const firstName = response["_firstName"]
+          ? decrypt(response["_firstName"])
+          : "";
+        const lastName = response["_lastName"]
+          ? decrypt(response["_lastName"])
+          : "";
+        setAvatarText(firstName.charAt(0) + lastName.charAt(0));
+      } else if (userType === "medicalCompany") {
+        setAvatarColour("orange");
+        let response = await smartContract.methods
+          .getMedicalCompanyProfile(account)
+          .call({ from: account });
+        const companyName = response["companyName"]
+          ? decrypt(response["companyName"])
+          : "";
+        setAvatarText(companyName.charAt(0));
+      } else if (userType === "government") {
+        setAvatarColour("green");
+        let response = await smartContract.methods
+          .getGovernmentProfile(account)
+          .call({ from: account });
+        const name = response["name"] ? decrypt(response["name"]) : "";
+        setAvatarText(name.charAt(0));
+      }
+    }
+    setup();
+  }, [userType]);
+
   return (
     <AppBar position="sticky">
       <StyledToolbar>

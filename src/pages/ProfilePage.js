@@ -132,7 +132,7 @@ export default function ProfilePage() {
               <Button
                 color={userType === "government" ? "secondary" : "primary"}
               >
-                Health Ministry
+                Government
               </Button>
             </ButtonGroup>
           </Box>
@@ -390,7 +390,7 @@ export default function ProfilePage() {
                       required
                       fullWidth
                       id="healthMinistryName"
-                      label="Health Ministry Name"
+                      label="Government Name"
                       value={
                         profileData["name"] ? decrypt(profileData["name"]) : ""
                       }

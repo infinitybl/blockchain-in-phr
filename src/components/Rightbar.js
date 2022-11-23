@@ -27,7 +27,7 @@ const Rightbar = ({
         }}
       >
         <Typography variant="h6" fontWeight={100} mt={2}>
-          Associated Health Ministries
+          Governments
         </Typography>
         <List
           sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
@@ -44,7 +44,7 @@ const Rightbar = ({
           ))}
         </List>
         <Typography variant="h6" fontWeight={100} mt={2}>
-          Associated Medical Companies
+          Medical Companies
         </Typography>
         <List
           sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
@@ -61,7 +61,7 @@ const Rightbar = ({
           ))}
         </List>
         <Typography variant="h6" fontWeight={100} mt={2}>
-          Associated Patients
+          Patients
         </Typography>
         <List
           sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}

@@ -27,8 +27,6 @@ import { Box } from "@mui/system";
 import moment from "moment";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 
-import ChangeTheme from "../components/ChangeTheme";
-
 import Web3Setup from "../web3";
 
 import ipfsClient from "../ipfs";
@@ -195,7 +193,6 @@ const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
               </Typography>
             </Fab>
           </Tooltip>
-          <ChangeTheme setMode={setMode} mode={mode} open={open} />
         </>
       )}
       <StyledModal

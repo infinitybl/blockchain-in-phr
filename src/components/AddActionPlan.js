@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import React, { useState, useEffect, useContext } from "react";
 import ReportIdContext from "../context/ReportIdContext";
+import UserTypeContext from "../context/UserTypeContext";
 import {
   Add as AddIcon,
   Close,
@@ -50,6 +51,8 @@ const AddActionPlan = ({ open, setOpen }) => {
   const [smartContract, setSmartContract] = useState(null);
   const [account, setAccount] = useState("");
 
+  const [userType, setUserType] = useContext(UserTypeContext);
+
   const [reportId, setReportId] = useContext(ReportIdContext);
 
   const [fileBuffer, setFileBuffer] = useState(null);
@@ -63,12 +66,20 @@ const AddActionPlan = ({ open, setOpen }) => {
 
   const [medicalCompanyInvolved, setMedicalCompanyInvolved] = useState("");
 
+  const [creatorName, setCreatorName] = useState("");
+
   useEffect(() => {
     async function setup() {
       const [smartContract, accounts] = await Web3Setup();
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
+      if (userType === "government") {
+        let response = await smartContract.methods
+          .getGovernmentProfile(accounts[0])
+          .call({ from: accounts[0] });
+        setCreatorName(response["name"] ? decrypt(response["name"]) : "");
+      }
     }
     setup();
   }, []);
@@ -185,11 +196,13 @@ const AddActionPlan = ({ open, setOpen }) => {
           </Box>
           <UserBox>
             <Typography fontWeight={600} variant="span">
-              Reporter:
+              Creator:
             </Typography>
-            <Avatar sx={{ width: 30, height: 30 }} />
+            <Avatar sx={{ width: 30, height: 30, bgcolor: "green" }}>
+              {creatorName.charAt(0)}
+            </Avatar>
             <Typography fontWeight={500} variant="span">
-              John Doe
+              {creatorName}
             </Typography>
           </UserBox>
           <TextField

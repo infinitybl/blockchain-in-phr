@@ -45430,12 +45430,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x1d6eb2Ab7337Ff88f54174CF2Ee1B727ab1e711e",
-      "transactionHash": "0x949b4c9a0ce2f13baf1f268cc640f1688a96b5f0a9cbdcc1b136698ce02fbbae"
+      "address": "0xA535Aa03bb218282F222b2204a9B6aE3C167cCaB",
+      "transactionHash": "0x461247360a4b76ca8b37ebb789c87b0332551e3d6e29d66400660b7d21047e8b"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-11-22T03:14:18.223Z",
+  "updatedAt": "2022-11-23T02:24:06.865Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",

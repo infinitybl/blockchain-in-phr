@@ -229,7 +229,7 @@ export default function Signup() {
                 color={localUserType === "government" ? "secondary" : "primary"}
                 onClick={(e) => setLocalUserType("government")}
               >
-                Health Ministry
+                Government
               </Button>
             </ButtonGroup>
           </Box>
@@ -412,7 +412,7 @@ export default function Signup() {
                       required
                       fullWidth
                       id="healthMinistryName"
-                      label="Health Ministry Name"
+                      label="Government Name"
                       autoFocus
                     />
                   </Grid>

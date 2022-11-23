@@ -41,7 +41,7 @@ export default function ErrorPage() {
               color="success"
               sx={{ height: 40, textAlign: "center", margin: "auto" }}
             >
-              Return to Homepage
+              Return to Landing Page
             </Button>
           </Box>
         </Box>
