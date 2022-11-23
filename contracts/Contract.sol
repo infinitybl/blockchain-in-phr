@@ -1,9 +1,13 @@
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
+// All the smart contract code for the AERS is in this file
 contract Contract {
+  // Mapping that stores the user type for each registered account address.
+  // The user types are "patient", "medicalCompany", or "government"
   mapping(address => string) userTypes;
 
+  // Gets the user type for an account address
   function getUserType(address _addr)
     public
     view
@@ -12,8 +16,10 @@ contract Contract {
     return userTypes[_addr];
   }
 
+  // Used to determine the next reportId for a new report
   uint256 public reportIndex = 0;
 
+  // Action plan data type
   struct ActionPlan {
     string creator;
     string actionPlanCreationDate;
@@ -26,6 +32,7 @@ contract Contract {
     string ipfsHash;
   }
 
+  // Report data type
   struct Report {
     uint256 reportId;
     string reporterFirstName;
@@ -41,11 +48,17 @@ contract Contract {
     bool isResolved;
   }
 
+  // Stores all the incident reports
   Report[] reports;
 
+  // Used to determine the next id for a new government type user
   uint256 public governmentListIndex = 0;
+
+  // Mapping that determines if an account at the specified address
+  // is a government type account
   mapping(address => bool) isGovernment;
 
+  // Government type user data type
   struct government {
     uint256 id;
     string name;
@@ -58,9 +71,13 @@ contract Contract {
     bool isApproved;
   }
 
+  // Mapping that stores the government accounts based on their address
   mapping(address => government) governments;
+
+  // Array that stores the addresses of all government accounts
   address[] public governmentList;
 
+  // Adds a new government user
   function addGovernment(
     string memory _name,
     string memory _country,
@@ -84,43 +101,7 @@ contract Contract {
     governmentListIndex = governmentListIndex + 1;
   }
 
-  // function getGovernmentById(uint256 _id)
-  //   public
-  //   view
-  //   returns (
-  //     uint256 id,
-  //     string memory name,
-  //     string memory country,
-  //     string memory phone,
-  //     string memory email,
-  //     string memory locationAddress,
-  //     address addr,
-  //     bool isApproved
-  //   )
-  // {
-  //   uint256 i = 0;
-  //   for (; i < governmentList.length; i++) {
-  //     if (governments[governmentList[i]].id == _id) {
-  //       break;
-  //     }
-  //   }
-  //   require(
-  //     governments[governmentList[i]].id == _id,
-  //     "Government could not be found with the given ID"
-  //   );
-  //   government memory matchedEntry = governments[governmentList[i]];
-  //   return (
-  //     matchedEntry.id,
-  //     matchedEntry.name,
-  //     matchedEntry.country,
-  //     matchedEntry.phone,
-  //     matchedEntry.email,
-  //     matchedEntry.locationAddress,
-  //     matchedEntry.addr,
-  //     matchedEntry.isApproved
-  //   );
-  // }
-
+  // Gets the profile information for a government user
   function getGovernmentProfile(address _address)
     public
     view
@@ -149,6 +130,7 @@ contract Contract {
     );
   }
 
+  // Adds an action plan to an existing report
   function addGovernmentActionPlan(
     address _addr,
     uint256 _reportId,
@@ -179,12 +161,18 @@ contract Contract {
     reports[_reportId].actionPlan.ipfsHash = _ipfsHash;
   }
 
+  // Used to determine the next id for a new medical company type user
   uint256 public medicalCompanyListIndex;
 
+  // Mapping that determines if an account at the specified address
+  // is a medical company type account
   mapping(address => bool) isMedicalCompany;
 
+  // Mapping that determines if a report and corresponding action plan has been resolved
+  // based on the reportId
   mapping(string => bool) resolvedActionPlans;
 
+  // Medical company type user data type
   struct medicalCompany {
     uint256 id;
     string companyName;
@@ -196,9 +184,13 @@ contract Contract {
     bool isApproved;
   }
 
+  // Mapping that stores the medical company accounts based on their address
   mapping(address => medicalCompany) medicalCompanies;
+
+  // Array that stores the addresses of all medical company accounts
   address[] public medicalCompanyList;
 
+  // Adds a new medical company user
   function addMedicalCompany(
     string memory _companyName,
     string memory _companyType,
@@ -224,45 +216,7 @@ contract Contract {
     medicalCompanyListIndex = medicalCompanyListIndex + 1;
   }
 
-  // function getMedicalCompanyById(uint256 _id)
-  //   public
-  //   view
-  //   returns (
-  //     uint256 id,
-  //     string memory companyName,
-  //     string memory companyType,
-  //     string memory phone,
-  //     string memory email,
-  //     string memory locationAddress,
-  //     address addr,
-  //     bool isApproved
-  //   )
-  // {
-  //   uint256 i = 0;
-  //   for (; i < medicalCompanyList.length; i++) {
-  //     if (medicalCompanies[medicalCompanyList[i]].id == _id) {
-  //       break;
-  //     }
-  //   }
-  //   require(
-  //     medicalCompanies[medicalCompanyList[i]].id == _id,
-  //     "MedicalCompany could not be found with the given ID"
-  //   );
-  //   medicalCompany memory matchedEntry = medicalCompanies[
-  //     medicalCompanyList[i]
-  //   ];
-  //   return (
-  //     matchedEntry.id,
-  //     matchedEntry.companyName,
-  //     matchedEntry.companyType,
-  //     matchedEntry.phone,
-  //     matchedEntry.email,
-  //     matchedEntry.locationAddress,
-  //     matchedEntry.addr,
-  //     matchedEntry.isApproved
-  //   );
-  // }
-
+  // Gets the profile information for a medical company user
   function getMedicalCompanyProfile(address _address)
     public
     view
@@ -291,13 +245,16 @@ contract Contract {
     );
   }
 
+  // Resolves a report and corresponding action plan by the reportId
   function resolveActionPlan(address _address, uint256 _reportId) public {
     require(isMedicalCompany[_address], "Medical company is not registered");
     reports[_reportId].isResolved = true;
   }
 
+  // Used to determine the next id for a new patient type user
   uint256 public patientListIndex = 0;
 
+  // Patient type user data type
   struct patient {
     uint256 id;
     string firstName;
@@ -311,10 +268,17 @@ contract Contract {
     address addr;
   }
 
+  // Array that stores the addresses of all patient accounts
   address[] private patientList;
+
+  // Mapping that stores the patient accounts based on their address
   mapping(address => patient) patients;
+
+  // Mapping that determines if an account at the specified address
+  // is a patient type account
   mapping(address => bool) isPatient;
 
+  // Adds a new patient user
   function addPatient(
     string memory _firstName,
     string memory _lastName,
@@ -342,6 +306,7 @@ contract Contract {
     patientListIndex = patientListIndex + 1;
   }
 
+  // Gets the profile information for a patient user
   function getPatientProfile(address _addr)
     public
     view
@@ -372,6 +337,7 @@ contract Contract {
     );
   }
 
+  // Adds a new incident report
   function addPatientReport(
     address _addr,
     string memory _incidentDate,
@@ -402,6 +368,7 @@ contract Contract {
     reportIndex = reportIndex + 1;
   }
 
+  // Get all the incidents reports
   function getReports(address _addr)
     public
     view
@@ -410,6 +377,7 @@ contract Contract {
     return reports;
   }
 
+  // Get an incident report by its reportId
   function getReportById(address _addr, uint256 _reportId)
     public
     view
@@ -418,6 +386,7 @@ contract Contract {
     return reports[_reportId];
   }
 
+  // Edits an incident report by its reportId
   function editPatientReport(
     address _addr,
     uint256 _reportId,
@@ -439,6 +408,7 @@ contract Contract {
     reports[_reportId].ipfsHash = _ipfsHash;
   }
 
+  // Get the names of all users
   function getAllNames(address _addr)
     public
     view
