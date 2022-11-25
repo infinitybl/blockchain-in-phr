@@ -205,7 +205,7 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
   };
 
   if (report.length === 0) {
-    return <div>Loading...</div>;
+    return <></>;
   }
 
   return (

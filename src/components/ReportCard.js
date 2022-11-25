@@ -59,15 +59,13 @@ const ReportCard = ({
 
   const resolveActionPlan = async (event) => {
     event.preventDefault();
-    try {
+    console.log("reportId" + reportIdNumber);
+    if (reportIdNumber) {
       const response = await smartContract.methods
-        .resolveActionPlan(account, parseInt(reportId))
+        .resolveActionPlan(account, parseInt(reportIdNumber))
         .send({ from: account });
       console.log(response);
       console.log("Action plan resolved!");
-    } catch (err) {
-      console.log(err);
-      alert("An error occured when resolving an action plan");
     }
 
     window.location.reload(false);
