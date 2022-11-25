@@ -135,7 +135,7 @@ const AddReport = ({ medicalCompanyNames, setMode, mode }) => {
         medicalCompanyInvolved: encrypt(medicalCompanyInvolved),
       };
 
-      let ipfsHash = "";
+      let ipfsHash = encrypt("");
 
       if (fileBuffer) {
         const { cid } = await ipfsClient.add(fileBuffer);

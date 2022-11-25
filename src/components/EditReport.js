@@ -78,6 +78,17 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
       setSmartContract(smartContract);
       setAccount(accounts[0]);
       console.log("Account: " + account);
+      if (reportId) {
+        let response = await smartContract.methods
+          .getReportById(account, reportId)
+          .call({ from: account });
+        setReport(response);
+        setReporterFirstName(response[1] ? decrypt(response[1]) : "");
+        setReporterLastName(response[2] ? decrypt(response[2]) : "");
+        setSelectedDate(response[3] ? decrypt(response[3]) : "");
+        setMedicalCompanyInvolved(response[8] ? decrypt(response[8]) : "");
+        console.log(JSON.stringify(response, null, 2));
+      }
     }
     setup();
   }, []);
@@ -97,13 +108,7 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
       }
     }
     getReport();
-  }, [reportId]);
-
-  useEffect(() => {
-    setMedicalCompanyInvolved(
-      medicalCompanyNames[0] ? medicalCompanyNames[0] : ""
-    );
-  }, [medicalCompanyNames]);
+  }, [reportId, open]);
 
   const captureFile = (e) => {
     e.stopPropagation();
@@ -144,7 +149,7 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
         medicalCompanyInvolved: encrypt(medicalCompanyInvolved),
       };
 
-      let ipfsHash = "";
+      let ipfsHash = encrypt("");
 
       if (fileBuffer) {
         const { cid } = await ipfsClient.add(fileBuffer);
@@ -156,9 +161,26 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
 
         console.log("Decrypted ipfsHash: " + decrypt(ipfsHash));
       } else {
-        ipfsHash = report[9] ? decrypt(report[9]) : "";
+        ipfsHash = report[9];
       }
 
+      console.log(
+        JSON.stringify(
+          {
+            account: account,
+            reportId: parseInt(requestData.reportId),
+            incidentDate: decrypt(requestData.incidentDate),
+            incidentDescription: decrypt(requestData.incidentDescription),
+            incidentCategory: decrypt(requestData.incidentCategory),
+            careSetting: decrypt(requestData.careSetting),
+            medicationTaken: decrypt(requestData.medicationTaken),
+            medicalCompanyInvolved: decrypt(requestData.medicalCompanyInvolved),
+            ipfsHash: decrypt(ipfsHash),
+          },
+          null,
+          2
+        )
+      );
       const response = await smartContract.methods
         .editPatientReport(
           account,
@@ -181,6 +203,10 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
     setOpen(false);
     window.location.reload(false);
   };
+
+  if (report.length === 0) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -302,7 +328,8 @@ const EditReport = ({ medicalCompanyNames, open, setOpen }) => {
             </NativeSelect>
           </FormControl>
           <Typography sx={{ marginTop: 4 }}>
-            Note: If you do not upload a file, the existing file won't change
+            Note: If you do not upload a new file, the existing file won't
+            change.
           </Typography>
           <TextField
             sx={{ marginTop: 2 }}
